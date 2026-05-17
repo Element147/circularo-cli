@@ -1,6 +1,10 @@
 # circularo-cli
 
 ## Native Application Quick Start
+For comprehensive instructions on building, running, and testing the application, please read the **[START.md](START.md)** guide.
+
+If you are an AI agent, please read the **[agents.md](agents.md)** guide and follow its strict rules.
+
 This project is configured to seamlessly compile into an ultra-fast, standalone native executable using GraalVM. **No local GraalVM installation is required**; the Gradle toolchain will auto-provision it for you.
 
 ### 1. Build the Native Executable
@@ -28,5 +32,7 @@ Verify compatibility under the GraalVM Closed-World assumption by running the te
 A modular, deterministic CLI search utility for Circularo resources producing human and machine-readable outputs. Built with Java 25, Spring Boot 3, Picocli, and Gradle using an agentic AI workflow.
 
 ## Architecture & Technical Decisions
-For deep dives into technical decisions and configuration details (such as the toolchain setup and workaround for the GraalVM Gradle plugin bug), refer to our Architecture Decision Records:
+For a high-level overview of the system architecture, please refer to the **[ARCHITECTURE.md](ARCHITECTURE.md)** file.
+
+For deep dives into historical technical decisions and configuration details (such as the toolchain setup and workaround for the GraalVM Gradle plugin bug), refer to our Architecture Decision Records:
 * [0001 - GraalVM Native Build Configuration](docs/adr/0001-graalvm-native-build-configuration.md)
