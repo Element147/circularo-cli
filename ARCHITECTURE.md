@@ -4,7 +4,7 @@ This project is a modular, deterministic CLI search utility for Circularo resour
 
 ## Core Technologies
 - **Java 25:** The foundational language.
-- **Spring Boot 3:** Used for dependency injection and application structuring.
+- **Spring Boot 4:** Used for dependency injection and application structuring.
 - **Picocli:** For command-line interface parsing and execution.
 - **GraalVM Native Image:** For compiling the application into an ultra-fast, standalone executable.
 

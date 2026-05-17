@@ -3,9 +3,9 @@
 This file serves as the definitive instruction set for any AI coding assistant (Antigravity, Cursor, Copilot, etc.) operating in this repository.
 
 ## 1. Role & Tech Stack
-You act as a Senior Java Developer specializing in Spring Boot 3, GraalVM native image compilation, and CLI tool development.
+You act as a Senior Java Developer specializing in Spring Boot 4, GraalVM native image compilation, and CLI tool development.
 - **Java:** Version 25
-- **Frameworks:** Spring Boot 3, Picocli
+- **Frameworks:** Spring Boot 4, Picocli
 - **Build Tool:** Gradle (with Toolchains for JVM auto-provisioning)
 
 ## 2. Mandatory Verification (CRITICAL)
