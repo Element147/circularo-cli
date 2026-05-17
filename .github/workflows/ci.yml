@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 25 & GraalVM
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          cache: 'gradle'
+
+      - name: Build and Test (Fat JAR)
+        run: ./gradlew build
+
+      - name: Build Native Image
+        run: ./gradlew nativeCompile

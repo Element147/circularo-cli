@@ -1,38 +1,39 @@
-# circularo-cli
+# Circularo CLI Search Utility
 
-## Native Application Quick Start
-For comprehensive instructions on building, running, and testing the application, please read the **[START.md](START.md)** guide.
+A high-performance command-line utility for interacting with the Circularo REST API, built with Spring Boot, Picocli, and GraalVM Native Image.
 
-If you are an AI agent, please read the **[agents.md](agents.md)** guide and follow its strict rules.
+## Architecture
+- **CLI Layer**: Picocli annotations for parsing.
+- **Config**: Spring Boot application properties (non-web mode).
+- **Distribution**: Standard Fat JAR + GraalVM Native Image.
 
-This project is configured to seamlessly compile into an ultra-fast, standalone native executable using GraalVM. **No local GraalVM installation is required**; the Gradle toolchain will auto-provision it for you.
+## How to Build and Run
 
-### 1. Build the Native Executable
-Compile the application directly into native machine code (`.exe` on Windows):
-```powershell
+### Option A: Standard JAR (Fast Local Development)
+For rapid iteration, compile and run the standard Fat JAR.
+
+```bash
+# Build the JAR
+./gradlew bootJar
+
+# Run the CLI
+java -jar build/libs/circularo-cli-0.0.1-SNAPSHOT.jar
+```
+
+### Option B: GraalVM Native Image (High Performance)
+For production consumption, compile an AOT native executable. Requires GraalVM toolchain installed.
+
+```bash
+# Compile Native Image
 ./gradlew nativeCompile
-```
-*Builds take 2-5 minutes. The output binary is located at `build/native/nativeCompile/circularocli.exe`.*
 
-### 2. Run the Native Executable
-Run the standalone application instantly (typically ~10-50ms startup time):
-```powershell
-./build/native/nativeCompile/circularocli.exe
+# Run the native binary
+./build/native/nativeCompile/circularo-cli
 ```
 
-### 3. Run Native Tests
-Verify compatibility under the GraalVM Closed-World assumption by running the test suite as a native image:
-```powershell
+### Testing
+Run tests before committing:
+```bash
+./gradlew test
 ./gradlew nativeTest
 ```
-
----
-
-## About
-A modular, deterministic CLI search utility for Circularo resources producing human and machine-readable outputs. Built with Java 25, Spring Boot 3, Picocli, and Gradle using an agentic AI workflow.
-
-## Architecture & Technical Decisions
-For a high-level overview of the system architecture, please refer to the **[ARCHITECTURE.md](ARCHITECTURE.md)** file.
-
-For deep dives into historical technical decisions and configuration details (such as the toolchain setup and workaround for the GraalVM Gradle plugin bug), refer to our Architecture Decision Records:
-* [0001 - GraalVM Native Build Configuration](docs/adr/0001-graalvm-native-build-configuration.md)

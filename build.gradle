@@ -21,6 +21,9 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'info.picocli:picocli-spring-boot-starter:4.7.6'
+	implementation 'info.picocli:picocli:4.7.6'
+	annotationProcessor 'info.picocli:picocli-codegen:4.7.6'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -48,5 +51,11 @@ graalvmNative {
 
 tasks.named('nativeTest') {
 	runtimeArgs.set([])
+}
+
+task printClasspath {
+    doLast {
+        configurations.compileClasspath.each { println it }
+    }
 }
 
