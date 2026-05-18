@@ -26,3 +26,26 @@ This ensures a Git-tracked backward audit of how solutions were derived.
 Before proposing design changes or adding new dependencies, you must read:
 - `ARCHITECTURE.md` (for the current state and core design principles).
 - Relevant ADRs in `docs/adr/`.
+
+## 5. Autonomous Agent Router & Skills
+
+Before executing ANY prompt, analyze the user's request and the files in context. Automatically apply the following skills based on the triggers defined below.
+
+### 🟢 TRIGGER: UI & Command Layer
+**WHEN** the user asks to add a new command, parse arguments, or you are editing files in `src/main/java/com/circularo/cli/cli/*`:
+- **Execute Skill [Strict Boundaries]:** Put only Picocli `@Command` and `@Option` logic here. Do NOT write HTTP calls or output formatting in these classes. Inject services via constructor.
+- **Execute Skill [Deterministic Output]:** Always ensure the command accepts a `--format` flag. Route the API response to the `format` package. Never use raw `System.out.println` here.
+
+### 🟢 TRIGGER: API & Network Layer
+**WHEN** the user asks to fetch data, handle JSON, or you are editing files in `src/main/java/com/circularo/cli/api/*`:
+- **Execute Skill [Native Java Client]:** Exclusively use `java.net.http.HttpClient`. DO NOT import Retrofit, OkHttp, or Apache.
+- **Execute Skill [Resilience]:** Always wrap calls in try-catch blocks handling `IOException` and `InterruptedException`. Map HTTP 4xx/5xx to a custom `CircularoException`.
+
+### 🟢 TRIGGER: Exception Handling
+**WHEN** the user asks to fix an error, or you are writing `catch` blocks or error classes:
+- **Execute Skill [Graceful Failure]:** Do NOT dump raw stack traces. Distinguish between missing credentials, HTTP 401/403, and network errors. Print a clean, actionable message to `System.err`.
+
+### 🟢 TRIGGER: Architecture & Configuration
+**WHEN** the user asks to add a new dependency, change `build.gradle`, or modify the authentication logic:
+- **Execute Skill [Dependency Diet]:** Challenge the necessity of the dependency. Keep the project lightweight for GraalVM AOT compilation.
+- **Execute Skill [Agentic Chronicler]:** Automatically remind the user to document this architectural shift. Draft a short entry for `docs/decisions.md` and present it in your response.
