@@ -1,48 +1,65 @@
-# Circularo CLI - Incremental Implementation Plan
+# Circularo CLI - Master Implementation & Specification Plan
 
-**Instructions for the AI Agent:**
-This document serves as our source of truth and state tracker for the Circularo CLI implementation. We are building a modular, deterministic CLI search utility. You must read this plan before executing tasks. When you complete a task, you MUST update this file by changing `[ ]` to `[x]` and commit the change to preserve progress history. Work in small steps and verify the result after each meaningful change.
+**Context for the AI Agent:**
+This document is the absolute source of truth for the Circularo CLI project. It replaces any external PDF specifications. We are building a practical CLI utility capable of searching Circularo resources, producing deterministic output, and serving as a solid foundation for future automation work. The emphasis is on judgment, architecture, and execution quality, not on producing the largest possible feature set.
 
-## Phase 1: Scaffolding & Core Architecture (Completed)
-- [x] Initialize Git repository, `build.gradle` (Java 25, Spring Boot 3 Non-Web, Picocli, GraalVM).
-- [x] Create the thin CLI layer, API layer, config layer, and formatting layer packages.
-- [x] Implement `ConfigLoader` with a fallback pattern for secure credential handling.
-- [x] Set up GitHub Actions CI pipeline for automated building.
-- [x] Establish `docs/decisions.md` to track architectural choices.
+**Agent Workflow Rules:**
+1. Work in small steps and verify the result after each meaningful change.
+2. Keep notes on unresolved questions and design decisions.
+3. For all API endpoints, request structures, and response schemas, strictly refer to the local `api-1.yaml` Swagger file.
+4. When you complete a task, update the checkbox from `[ ]` to `[x]` and commit the change to preserve progress history.
 
-## Phase 2: API Client & Error Handling (Day 2)
-*Goal: Establish a resilient API communication layer using native Java libraries.*
-- [x] Create a `CircularoException` hierarchy in the `api` package. It must distinguish between invalid credentials, authorization failures, malformed input, and upstream API errors.
-- [x] Implement `CircularoApiClient` using `java.net.http.HttpClient` to ensure minimal dependencies.
-- [x] Implement a generic `sendRequest(HttpRequest)` method that injects the authorization token retrieved from `ConfigLoader`.
-- [x] Implement robust error propagation: intercept non-200 HTTP status codes and map them to the specific `CircularoException` variants.
-- [x] **Document:** Add a note in `docs/decisions.md` explaining the API client design, error mapping strategy, and how auth tokens are attached.
+---
 
-## Phase 3: Data Models & Output Formatting (Day 3)
-*Goal: Ensure deterministic output suitable for both manual inspection and downstream automation.*
-- [ ] Define Java Records in the `model` package representing core Circularo resources (e.g., `User`, `Document`). Keep field naming stable.
-- [ ] Define an `OutputFormatter` interface in the `format` layer.
-- [ ] Implement `JsonFormatter` to satisfy the requirement for a structured, machine-readable format. Use Jackson Databind.
-- [ ] Implement `TableFormatter` (or `TextFormatter`) to satisfy the requirement for a human-readable format.
-- [ ] Implement `JsonFormatter` to satisfy the requirement for a structured, machine-readable format. Use Jackson Databind.
-- [ ] Implement `TableFormatter` (or `TextFormatter`) to satisfy the requirement for a human-readable format.
-- [ ] **Document:** Add an entry in `docs/decisions.md` explaining how raw response details are preserved for automation versus how they are summarized for human readability.
+## Milestone 1: Scaffolding & Core Architecture (Completed)
+*Objective: The repository must separate concerns cleanly enough that CLI parsing, API access, query handling, and output formatting do not bleed into one another.*
+- [x] Initialize project with Java 25, Spring Boot 3 (Non-Web), Gradle, and Picocli.
+- [x] Create modular package structure: `cli`, `api`, `format`, `config`, `model`.
+- [x] Implement `ConfigLoader` with a fallback pattern supporting repeatable local execution.
+- [x] Set up CI pipeline.
+- [x] Establish `docs/decisions.md` to track design choices.
 
-## Phase 4: CLI Surface Assembly & Query Translation (Day 4)
-*Goal: Assemble the user-facing command tree and wire it to the API.*
-- [ ] Implement `UsersCmd` in the `cli` package. Add `--query` and `--format` flags. Example target: `circularo-cli users --query "mary griffin"`.
-- [ ] Implement `DocumentsCmd` in the `cli` package. Add `--query` and `--format` flags. Example target: `circularo-cli documents --query "title: Invoice*"`.
-- [ ] Implement a custom `IExecutionExceptionHandler` for Picocli to catch `CircularoException`. It must print clean, predictable error messages to `STDERR` without dumping raw Java stack traces to the user.
-- [ ] Wire the `CircularoApiClient` and `OutputFormatter` into the command run logic, ensuring the CLI layer remains thin.
-- [ ] Verify that repeated runs with the same inputs produce strictly equivalent outputs.
+## Milestone 2: API Client & Resilient Error Handling (Completed)
+*Objective: The tool should fail clearly and predictably when something goes wrong. The candidate should not hide API failures or collapse them into vague CLI messages.*
+- [x] Implement native `java.net.http.HttpClient` wrapper (`CircularoApiClient`).
+- [x] Implement token injection from `ConfigLoader` into authorization headers.
+- [x] Implement `CircularoException` hierarchy. The CLI must distinguish between:
+  - invalid or missing credentials
+  - authorization failures
+  - malformed input
+  - empty result sets
+  - upstream API errors
+  - local configuration problems
+- [x] **Document:** Record API client constraints and error mapping in `docs/decisions.md`.
 
-## Phase 5: Testing, Documentation & Final Review (Day 5)
-*Goal: Protect main behaviors and finalize delivery artifacts.*
-- [ ] Write unit tests for command parsing and dispatch (verifying Picocli flags).
-- [ ] Write unit tests for output formatting (verifying JSON and Table outputs are deterministic).
-- [ ] Write tests covering request construction and error handling using a mocked HTTP client or web server.
-- [ ] Implement at least one end-to-end happy path test covering the full flow.
-- [ ] Update the top-level `README.md` to explain the product, the main command model, and how to configure/run it.
-- [ ] Create `docs/open_questions.md`. Document explicitly any API behavior that was unclear or tenant-specific, accepted limitations, and assumptions.
-- [ ] Add a short summary of lessons learned, unresolved risks, and recommendations for future iterations to `docs/open_questions.md`.
-- [ ] Final verification: Run `./gradlew bootJar` and test the compiled executable. Check all pending documentation requirements.
+## Milestone 3: Data Models & Deterministic Output Formatting (Completed)
+*Objective: Output must be deterministic. Repeated runs with the same inputs should produce equivalent outputs unless the underlying data has changed.*
+- [x] Parse `api-1.yaml` to define Java Records in the `model` package for core search resources (e.g., User, Document). Ensure field naming and ordering remains stable.
+- [x] Define an `OutputFormatter` interface in the `format` package. The implementation should avoid ad hoc formatting that makes later automation difficult.
+- [x] Implement `JsonFormatter`. The CLI must support at least one structured machine-readable format. Preserve raw response details when useful for downstream processing.
+- [x] Implement `TableFormatter` (or `TextFormatter`). The CLI must support at least one tabular or human-readable format.
+- [x] **Document:** Record output formatting decisions in `docs/decisions.md`, detailing how raw data is preserved vs. summarized.
+
+## Milestone 4: Command Line Interface (CLI) Assembly
+*Objective: The CLI should support the core search use case for Circularo data. The behavior should be easy to discover, consistent across resource types, and stable enough to support automation.*
+- [ ] Implement `UsersCmd` in the `cli` package (e.g., `circularo-cli users --query "mary griffin"`). Delegate strictly to the API layer and use the `OutputFormatter`.
+- [ ] Implement `DocumentsCmd` in the `cli` package (e.g., `circularo-cli documents --query "title: Invoice*"`). Handle pagination or large-result handling where relevant.
+- [ ] Ensure commands support structured and unstructured query input where appropriate.
+- [ ] Implement a custom `IExecutionExceptionHandler` for Picocli. Error messages should help a user or agent understand what failed and where to look next. Do NOT dump raw Java stack traces to the console.
+- [ ] Ensure the tool can handle large result sets without becoming interactive or unpredictable.
+
+## Milestone 5: Testing Strategy
+*Objective: The candidate should include tests that prove the CLI behaves as expected for the main workflows. Tests should be targeted and deterministic rather than exhaustive for their own sake.*
+- [ ] Write tests covering command parsing or dispatch.
+- [ ] Write tests covering request construction (using mocked HTTP clients or wiremock).
+- [ ] Write tests covering output formatting.
+- [ ] Write tests covering error handling.
+- [ ] Implement at least one end-to-end happy path, if practical.
+
+## Milestone 6: Final Documentation & Delivery Polish
+*Objective: The candidate should provide documentation that makes the project usable without a live walkthrough.*
+- [ ] Update `README.md` to explain the purpose of the tool, the main command model, how to configure it, and how the repository is organized.
+- [ ] Review `docs/decisions.md` to ensure it captures all design choices and limitations intentionally accepted.
+- [ ] Create `docs/open_questions.md`. Document any open questions or assumptions that remain, and any API behavior that was unclear or tenant-specific.
+- [ ] In `docs/open_questions.md`, add a short summary of lessons learned, a candid note on any struggles, gaps, or unresolved risks, and recommendations for how the project could be improved in a follow-up iteration.
+- [ ] Perform a final build (`./gradlew build` and `./gradlew nativeCompile`) and push all commits to the repository.

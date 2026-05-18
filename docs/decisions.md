@@ -27,3 +27,14 @@
 **Context**: Users need a seamless, zero-config method to configure their API key and base URL without exposing sensitive tokens in shell commands or manual directory setups.
 **Decision**: Support automatic resolution of a `.env` file containing `CIRCULARO_API_TOKEN` and `CIRCULARO_API_URL` next to the running application executable or in the current working directory, with robust ignoring of default placeholders.
 **Consequences**: Extremely convenient developer and operator experience. Placeholders are safely ignored to fall back to other config layers, preventing misconfiguration crashes. Safe and isolated from system-wide environments.
+
+## Lightweight JSON Parser via Jackson Databind
+**Context**: We need to serialize/deserialize API request/response payloads to strongly typed domain structures securely and repeatably without introducing retrofitting bloat or breaking GraalVM compatibility.
+**Decision**: Import the industry-standard, lightweight `com.fasterxml.jackson.core:jackson-databind` dependency directly to parse response JSON payloads into Java records.
+**Consequences**: Completely native/AOT-compliant under GraalVM when utilizing non-reflective Jackson configurations or standard Record structures. High execution speed, type safety, and seamless integration with Spring Boot's built-in paradigms.
+
+## Deterministic, AOT-Friendly Extensible Output Formatting
+**Context**: CLI users and automated scripts require clean, predictable console outputs in various formats (structured JSON, clean human-readable ASCII tables) without incurring performance or runtime reflection penalties.
+**Decision**: Establish a highly cohesive, non-reflective `OutputFormatter` interface mapping specific domain models to concrete formatter implementations (`JsonFormatter` and `TableFormatter`).
+**Consequences**: Avoids complex runtime generic reflection that slows down GraalVM AOT compilation. Ensures output consistency across repeated runs, enables trivial integration of future formats, and guarantees stable machine-readable automation pipelines.
+
