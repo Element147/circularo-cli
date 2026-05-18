@@ -16,11 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java 25 & GraalVM
-        uses: actions/setup-java@v4
+      - name: Setup GraalVM 25
+        uses: graalvm/setup-graalvm@v1
         with:
           java-version: '25'
-          distribution: 'graalvm'
+          distribution: 'graalvm-community'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           cache: 'gradle'
 
       - name: Configure Developer Command Prompt for MSVC
