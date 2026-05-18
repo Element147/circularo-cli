@@ -4,12 +4,22 @@ import com.circularo.cli.config.ConfigLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.circularo.cli.model.User;
+import com.circularo.cli.model.UserSearchResponse;
+import com.circularo.cli.model.Document;
+import com.circularo.cli.model.DocumentSearchResponse;
+import com.circularo.cli.model.DocumentSearchResultWrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Resilient, dependency-free API client for Circularo REST endpoints.
@@ -21,6 +31,7 @@ public class CircularoApiClient {
 
     private final ConfigLoader configLoader;
     private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public CircularoApiClient(ConfigLoader configLoader) {
@@ -28,14 +39,16 @@ public class CircularoApiClient {
         this.httpClient = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
+        this.objectMapper = new ObjectMapper();
     }
 
     /**
-     * Package-private constructor dedicated for test injection (TDD mocking).
+     * Public constructor dedicated for test injection (TDD mocking & stubbing).
      */
-    CircularoApiClient(ConfigLoader configLoader, HttpClient httpClient) {
+    public CircularoApiClient(ConfigLoader configLoader, HttpClient httpClient) {
         this.configLoader = configLoader;
         this.httpClient = httpClient;
+        this.objectMapper = new ObjectMapper();
     }
 
     /**
@@ -161,5 +174,68 @@ public class CircularoApiClient {
                 || name.equalsIgnoreCase("content-length")
                 || name.equalsIgnoreCase("host")
                 || name.equalsIgnoreCase("upgrade");
+    }
+
+    /**
+     * Searches for Circularo users using the Elasticsearch syntax query.
+     */
+    public List<User> searchUsers(String query) {
+        try {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("format", "minimal");
+            if (query != null && !query.isBlank()) {
+                Map<String, Object> queryMap = new HashMap<>();
+                Map<String, Object> filterMap = new HashMap<>();
+                Map<String, Object> mustMap = new HashMap<>();
+                Map<String, Object> queryStringMap = new HashMap<>();
+                queryStringMap.put("query", query);
+                mustMap.put("query_string", queryStringMap);
+                filterMap.put("must", java.util.List.of(mustMap));
+                queryMap.put("query", filterMap);
+                payload.put("userQuery", queryMap);
+            }
+            String body = objectMapper.writeValueAsString(payload);
+            HttpRequest request = newRequestBuilder("api/v1/users/search")
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+            HttpResponse<String> response = sendRequest(request);
+            UserSearchResponse searchResponse = objectMapper.readValue(response.body(), UserSearchResponse.class);
+            return searchResponse.results() != null ? searchResponse.results() : java.util.List.of();
+        } catch (IOException e) {
+            throw new CircularoException("Failed to serialize/deserialize user search payload", e);
+        }
+    }
+
+    /**
+     * Searches for Circularo documents using the Elasticsearch syntax query.
+     */
+    public List<Document> searchDocuments(String query) {
+        try {
+            Map<String, Object> payload = new HashMap<>();
+            if (query != null && !query.isBlank()) {
+                Map<String, Object> queryStringMap = new HashMap<>();
+                queryStringMap.put("query", query);
+                Map<String, Object> esQueryMap = new HashMap<>();
+                esQueryMap.put("query_string", queryStringMap);
+                payload.put("esQuery", java.util.List.of(esQueryMap));
+            }
+            String body = objectMapper.writeValueAsString(payload);
+            HttpRequest request = newRequestBuilder("api/v1/search")
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+            HttpResponse<String> response = sendRequest(request);
+            DocumentSearchResponse searchResponse = objectMapper.readValue(response.body(), DocumentSearchResponse.class);
+            if (searchResponse.results() == null) {
+                return java.util.List.of();
+            }
+            return searchResponse.results().stream()
+                    .map(DocumentSearchResultWrapper::document)
+                    .filter(java.util.Objects::nonNull)
+                    .toList();
+        } catch (IOException e) {
+            throw new CircularoException("Failed to serialize/deserialize document search payload", e);
+        }
     }
 }

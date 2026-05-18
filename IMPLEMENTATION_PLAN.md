@@ -40,21 +40,21 @@ This document is the absolute source of truth for the Circularo CLI project. It 
 - [x] Implement `TableFormatter` (or `TextFormatter`). The CLI must support at least one tabular or human-readable format.
 - [x] **Document:** Record output formatting decisions in `docs/decisions.md`, detailing how raw data is preserved vs. summarized.
 
-## Milestone 4: Command Line Interface (CLI) Assembly
+## Milestone 4: Command Line Interface (CLI) Assembly (Completed)
 *Objective: The CLI should support the core search use case for Circularo data. The behavior should be easy to discover, consistent across resource types, and stable enough to support automation.*
-- [ ] Implement `UsersCmd` in the `cli` package (e.g., `circularo-cli users --query "mary griffin"`). Delegate strictly to the API layer and use the `OutputFormatter`.
-- [ ] Implement `DocumentsCmd` in the `cli` package (e.g., `circularo-cli documents --query "title: Invoice*"`). Handle pagination or large-result handling where relevant.
-- [ ] Ensure commands support structured and unstructured query input where appropriate.
-- [ ] Implement a custom `IExecutionExceptionHandler` for Picocli. Error messages should help a user or agent understand what failed and where to look next. Do NOT dump raw Java stack traces to the console.
-- [ ] Ensure the tool can handle large result sets without becoming interactive or unpredictable.
+- [x] Implement `UsersCmd` in the `cli` package (e.g., `circularo-cli users --query "mary griffin"`). Delegate strictly to the API layer and use the `OutputFormatter`.
+- [x] Implement `DocumentsCmd` in the `cli` package (e.g., `circularo-cli documents --query "title: Invoice*"`). Handle pagination or large-result handling where relevant.
+- [x] Ensure commands support structured and unstructured query input where appropriate.
+- [x] Implement a custom `IExecutionExceptionHandler` for Picocli. Error messages should help a user or agent understand what failed and where to look next. Do NOT dump raw Java stack traces to the console.
+- [x] Ensure the tool can handle large result sets without becoming interactive or unpredictable.
 
-## Milestone 5: Testing Strategy
+## Milestone 5: Testing Strategy (Completed)
 *Objective: The candidate should include tests that prove the CLI behaves as expected for the main workflows. Tests should be targeted and deterministic rather than exhaustive for their own sake.*
-- [ ] Write tests covering command parsing or dispatch.
-- [ ] Write tests covering request construction (using mocked HTTP clients or wiremock).
-- [ ] Write tests covering output formatting.
-- [ ] Write tests covering error handling.
-- [ ] Implement at least one end-to-end happy path, if practical.
+- [x] Write tests covering command parsing or dispatch.
+- [x] Write tests covering request construction (using mocked HTTP clients or wiremock).
+- [x] Write tests covering output formatting.
+- [x] Write tests covering error handling.
+- [x] Implement at least one end-to-end happy path, if practical.
 
 ## Milestone 6: Final Documentation & Delivery Polish
 *Objective: The candidate should provide documentation that makes the project usable without a live walkthrough.*

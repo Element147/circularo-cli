@@ -25,7 +25,9 @@ public class CircularoCliApplication implements CommandLineRunner, ExitCodeGener
 
     @Override
     public void run(String... args) {
-        exitCode = new CommandLine(rootCmd, factory).execute(args);
+        exitCode = new CommandLine(rootCmd, factory)
+                .setExecutionExceptionHandler(new com.circularo.cli.cli.CircularoExecutionExceptionHandler())
+                .execute(args);
     }
 
     @Override
