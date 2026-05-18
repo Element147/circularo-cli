@@ -40,6 +40,7 @@ Before executing ANY prompt, analyze the user's request and the files in context
 **WHEN** the user asks to fetch data, handle JSON, or you are editing files in `src/main/java/com/circularo/cli/api/*`:
 - **Execute Skill [Native Java Client]:** Exclusively use `java.net.http.HttpClient`. DO NOT import Retrofit, OkHttp, or Apache.
 - **Execute Skill [Resilience]:** Always wrap calls in try-catch blocks handling `IOException` and `InterruptedException`. Map HTTP 4xx/5xx to a custom `CircularoException`.
+- **Execute Skill [API Contract Driven]:** Always use `docs/api-1.yaml` as the absolute source of truth for REST API endpoints. Read this Swagger documentation to fully understand the request/response schema before implementing any API call.
 
 ### 🟢 TRIGGER: Exception Handling
 **WHEN** the user asks to fix an error, or you are writing `catch` blocks or error classes:
