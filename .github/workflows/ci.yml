@@ -8,7 +8,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
@@ -19,8 +23,14 @@ jobs:
           distribution: 'graalvm'
           cache: 'gradle'
 
+      - name: Configure Developer Command Prompt for MSVC
+        if: matrix.os == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Build and Test (Fat JAR)
+        shell: bash
         run: ./gradlew build
 
       - name: Build Native Image
+        shell: bash
         run: ./gradlew nativeCompile
