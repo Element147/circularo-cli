@@ -11,7 +11,7 @@ version = '0.0.1-SNAPSHOT'
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(25)
-		vendor = JvmVendorSpec.matching("GraalVM")
+		vendor = JvmVendorSpec.GRAAL_VM
 	}
 }
 
@@ -38,13 +38,13 @@ graalvmNative {
 		main {
 			javaLauncher = javaToolchains.launcherFor {
 				languageVersion = JavaLanguageVersion.of(25)
-				vendor = JvmVendorSpec.matching("GraalVM")
+				vendor = JvmVendorSpec.GRAAL_VM
 			}
 		}
 		test {
 			javaLauncher = javaToolchains.launcherFor {
 				languageVersion = JavaLanguageVersion.of(25)
-				vendor = JvmVendorSpec.matching("GraalVM")
+				vendor = JvmVendorSpec.GRAAL_VM
 			}
 		}
 	}

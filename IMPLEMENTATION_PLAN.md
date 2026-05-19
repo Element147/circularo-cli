@@ -58,8 +58,8 @@ This document is the absolute source of truth for the Circularo CLI project. It 
 
 ## Milestone 6: Final Documentation & Delivery Polish
 *Objective: The candidate should provide documentation that makes the project usable without a live walkthrough.*
-- [ ] Update `README.md` to explain the purpose of the tool, the main command model, how to configure it, and how the repository is organized.
-- [ ] Review `docs/decisions.md` to ensure it captures all design choices and limitations intentionally accepted.
-- [ ] Create `docs/open_questions.md`. Document any open questions or assumptions that remain, and any API behavior that was unclear or tenant-specific.
-- [ ] In `docs/open_questions.md`, add a short summary of lessons learned, a candid note on any struggles, gaps, or unresolved risks, and recommendations for how the project could be improved in a follow-up iteration.
-- [ ] Perform a final build (`./gradlew build` and `./gradlew nativeCompile`) and push all commits to the repository.
+- [x] Update `README.md` to explain the purpose of the tool, the main command model, how to configure it, and how the repository is organized.
+- [x] Review `docs/decisions.md` to ensure it captures all design choices and limitations intentionally accepted.
+- [x] Create `docs/open_questions.md`. Document any open questions or assumptions that remain, and any API behavior that was unclear or tenant-specific.
+- [x] In `docs/open_questions.md`, add a short summary of lessons learned, a candid note on any struggles, gaps, or unresolved risks, and recommendations for how the project could be improved in a follow-up iteration.
+- [x] Perform a final build (`./gradlew build` and `./gradlew nativeCompile`) and push all commits to the repository.
