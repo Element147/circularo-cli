@@ -2,6 +2,10 @@
 
 A high-performance command-line utility for interacting with the Circularo REST API, built with Spring Boot, Picocli, and GraalVM Native Image.
 
+> [!TIP]
+> **New to CLI tools or looking for a step-by-step flow guide?**  
+> Read the beginner-friendly [User Manual](docs/user_manual.md) which contains step-by-step setup guides, full parameter listings, query syntax cheat sheets, and troubleshooting steps.
+
 ## Quickstart (For Non-Programmers)
 To quickly run the application, open your terminal (e.g., PowerShell or Bash) and ensure you are in the **root directory of this project** (where this README file is located).
 

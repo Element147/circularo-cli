@@ -20,6 +20,7 @@ Before executing any significant task or developing a new feature, you MUST:
 1. Create a numbered implementation plan inside the `docs/plans/` directory (e.g., `0002-new-feature.md`).
 2. Include the **exact prompt** provided by the user that triggered the plan at the top of the document.
 3. Detail the steps, architectural decisions, and expected outcome.
+4. When introducing or modifying any CLI command, subcommand, or option, you MUST update both the Picocli command class annotations/help messages and the User Manual (`docs/user_manual.md`) to keep them in sync as dual sources of truth.
 This ensures a Git-tracked backward audit of how solutions were derived.
 
 ## 4. Architectural Constraints

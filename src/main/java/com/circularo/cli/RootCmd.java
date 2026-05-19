@@ -11,7 +11,27 @@ import java.util.concurrent.Callable;
 @Command(
         name = "circularo-cli",
         mixinStandardHelpOptions = true,
-        description = "Circularo CLI Search Utility",
+        header = {
+            "==================================================",
+            "        CIRCULARO CLI SEARCH UTILITY v1.0.0",
+            "=================================================="
+        },
+        description = {
+            "",
+            "Query and retrieve resources from your Circularo tenant directly from the command line.",
+            "Requires API URL and API Token configured in a local '.env' file.",
+            "",
+            "Quick Examples:",
+            "  - Find all internal users:           circularo-cli users",
+            "  - Query users by email or name:      circularo-cli users --query \"mail:*example.com\"",
+            "  - Search documents by query string:  circularo-cli documents --query \"title:Invoice*\"",
+            "  - Output results in JSON format:     circularo-cli users --format json"
+        },
+        footer = {
+            "",
+            "Use 'circularo-cli <command> --help' for details on specific sub-commands.",
+            "Read 'docs/user_manual.md' for comprehensive query syntax guide and troubleshooting."
+        },
         subcommands = {UsersCmd.class, DocumentsCmd.class}
 )
 public class RootCmd implements Callable<Integer> {

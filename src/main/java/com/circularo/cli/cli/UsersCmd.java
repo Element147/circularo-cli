@@ -21,8 +21,27 @@ import java.util.List;
 @Component
 @Command(
         name = "users",
-        description = "Search and list Circularo users",
-        mixinStandardHelpOptions = true
+        mixinStandardHelpOptions = true,
+        header = "Search and retrieve Circularo user accounts.",
+        description = {
+            "",
+            "Queries the Circularo users database using Elasticsearch query_string syntax.",
+            "You can search for text matches across all fields, or filter by specific attributes.",
+            "",
+            "Supported Query Examples:",
+            "  - Simple keyword search:       -q \"Lubo\"",
+            "  - Filter by specific email:    -q \"mail:klauberl@seznam.cz\"",
+            "  - Wildcard domain filter:      -q \"mail:*@seznam.cz\"",
+            "  - Combine fields using AND:    -q \"recordType:internal AND mail:*seznam*\"",
+            "",
+            "Formatting Options:",
+            "  - Use '-f table' (default) to show results in a readable grid.",
+            "  - Use '-f json' to output raw JSON objects for integration scripts."
+        },
+        footer = {
+            "",
+            "Refer to 'docs/user_manual.md' for the complete user manual and troubleshooting steps."
+        }
 )
 public class UsersCmd implements Runnable {
 

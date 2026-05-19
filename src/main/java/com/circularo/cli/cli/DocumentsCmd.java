@@ -21,8 +21,27 @@ import java.util.List;
 @Component
 @Command(
         name = "documents",
-        description = "Search and list Circularo documents",
-        mixinStandardHelpOptions = true
+        mixinStandardHelpOptions = true,
+        header = "Search and retrieve Circularo documents.",
+        description = {
+            "",
+            "Queries the Circularo documents repository using Elasticsearch query_string syntax.",
+            "Finds documents based on titles, status, metadata, tags, and creator info.",
+            "",
+            "Supported Query Examples:",
+            "  - Match by exact title:       -q \"title:\\\"NDA Agreement.pdf\\\"\"",
+            "  - Wildcard title search:      -q \"title:Invoice*\"",
+            "  - Filter by document status:  -q \"status:signed\"",
+            "  - Multiple filters combined:  -q \"status:inprogress AND title:*Contract*\"",
+            "",
+            "Formatting Options:",
+            "  - Use '-f table' (default) to show results in a readable grid.",
+            "  - Use '-f json' to output raw JSON objects for integration scripts."
+        },
+        footer = {
+            "",
+            "Refer to 'docs/user_manual.md' for the complete user manual and troubleshooting steps."
+        }
 )
 public class DocumentsCmd implements Runnable {
 
