@@ -2,6 +2,40 @@
 
 A high-performance command-line utility for interacting with the Circularo REST API, built with Spring Boot, Picocli, and GraalVM Native Image.
 
+## Quickstart (For Non-Programmers)
+To quickly run the application, open your terminal (e.g., PowerShell or Bash) and ensure you are in the **root directory of this project** (where this README file is located).
+
+### Standard Run
+Use this method for a fast build process.
+
+1. **Build the application:**
+```bash
+./gradlew bootJar
+```
+
+2. **Run the application (example for searching users):**
+```bash
+java -jar build/libs/circularo-cli-0.0.1-SNAPSHOT.jar users --query "search_term"
+```
+*(Note: Make sure to create a `.env` file with your credentials in this directory before running, see the Configuration section below).*
+
+### Alternative: Native Build
+You can also compile the application into a standalone Native executable. This process takes much longer to build, but the resulting executable starts instantly and does not require Java to be installed on the machine running it.
+
+1. **Build the native application (this may take several minutes):**
+```bash
+./gradlew nativeCompile
+```
+
+2. **Run the native application:**
+```bash
+# On Windows
+.\build\native\nativeCompile\circularocli.exe users --query "search_term"
+
+# On Linux/macOS
+./build/native/nativeCompile/circularo-cli users --query "search_term"
+```
+
 ## Purpose
 This tool provides a deterministic, automation-friendly interface to search and retrieve resources (like Users and Documents) from a Circularo tenant. It is designed to be lightweight, fast, and easy to integrate into CI/CD pipelines or local developer workflows.
 
