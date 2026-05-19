@@ -10,6 +10,7 @@ import com.circularo.cli.model.Document;
 import com.circularo.cli.model.DocumentSearchResponse;
 import com.circularo.cli.model.DocumentSearchResultWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,6 +28,17 @@ import java.util.Map;
  * and seamless GraalVM AOT compilation.
  */
 @Component
+@RegisterReflectionForBinding({
+    User.class, 
+    UserSearchResponse.class, 
+    Document.class, 
+    DocumentSearchResponse.class, 
+    DocumentSearchResultWrapper.class,
+    java.util.Map.class,
+    java.util.HashMap.class,
+    java.util.List.class,
+    java.util.ArrayList.class
+})
 public class CircularoApiClient {
 
     private final ConfigLoader configLoader;
@@ -55,7 +67,7 @@ public class CircularoApiClient {
      * Helper method to construct a new {@link HttpRequest.Builder} preconfigured with
      * the absolute resolved endpoint URI using the configured API URL.
      *
-     * @param path the relative path (e.g. "api/v1/users/search" or "/search")
+     * @param path the relative path as defined in docs/api-1.yaml (e.g. "users/search" or "search"). The base URL from config already contains the API version prefix.
      * @return a request builder configured with the absolute URI
      */
     public HttpRequest.Builder newRequestBuilder(String path) {
@@ -195,7 +207,7 @@ public class CircularoApiClient {
                 payload.put("userQuery", queryMap);
             }
             String body = objectMapper.writeValueAsString(payload);
-            HttpRequest request = newRequestBuilder("api/v1/users/search")
+            HttpRequest request = newRequestBuilder("users/search")
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(body))
                     .build();
@@ -221,7 +233,7 @@ public class CircularoApiClient {
                 payload.put("esQuery", java.util.List.of(esQueryMap));
             }
             String body = objectMapper.writeValueAsString(payload);
-            HttpRequest request = newRequestBuilder("api/v1/search")
+            HttpRequest request = newRequestBuilder("search")
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(body))
                     .build();
