@@ -38,3 +38,4 @@ out/
 
 # Native test results
 test-results-native/
+.env
