@@ -15,9 +15,18 @@ You act as a Senior Java Developer specializing in Spring Boot 4, GraalVM native
 After every single code or configuration change, you **MUST** verify nothing has broken. Run:
 
 ```powershell
+# 1. Run unit and integration tests on both JVM and Native image
 ./gradlew test
 ./gradlew nativeTest
+
+# 2. Run the application and call the users API in JVM mode to verify live execution
+./gradlew bootRun --args="users"
+
+# 3. Build and execute the native compiled binary directly
+./gradlew nativeCompile
+.\build\native\nativeCompile\circularocli.exe users
 ```
+
 
 ## 3. Implementation Plan Tracking (MANDATORY)
 
