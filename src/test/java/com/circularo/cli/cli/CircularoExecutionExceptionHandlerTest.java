@@ -15,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CircularoExecutionExceptionHandlerTest {
 
-    private StubApiClient apiClient;
+    private StubUsersApiClient apiClient;
     private TableFormatter tableFormatter;
     private JsonFormatter jsonFormatter;
     private UsersCmd usersCmd;
 
     @BeforeEach
     void setUp() {
-        apiClient = new StubApiClient();
+        apiClient = new StubUsersApiClient();
         tableFormatter = new TableFormatter();
         jsonFormatter = new JsonFormatter();
         usersCmd = new UsersCmd(apiClient, tableFormatter, jsonFormatter);

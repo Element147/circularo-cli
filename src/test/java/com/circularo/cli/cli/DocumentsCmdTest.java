@@ -16,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DocumentsCmdTest {
 
-    private StubApiClient apiClient;
+    private StubDocumentsApiClient apiClient;
     private TableFormatter tableFormatter;
     private JsonFormatter jsonFormatter;
     private DocumentsCmd documentsCmd;
 
     @BeforeEach
     void setUp() {
-        apiClient = new StubApiClient();
+        apiClient = new StubDocumentsApiClient();
         tableFormatter = new TableFormatter();
         jsonFormatter = new JsonFormatter();
         documentsCmd = new DocumentsCmd(apiClient, tableFormatter, jsonFormatter);

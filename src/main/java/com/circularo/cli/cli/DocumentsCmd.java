@@ -1,6 +1,6 @@
 package com.circularo.cli.cli;
 
-import com.circularo.cli.api.CircularoApiClient;
+import com.circularo.cli.api.DocumentsApiClient;
 import com.circularo.cli.format.JsonFormatter;
 import com.circularo.cli.format.TableFormatter;
 import com.circularo.cli.model.Document;
@@ -45,7 +45,7 @@ import java.util.List;
 )
 public class DocumentsCmd implements Runnable {
 
-    private final CircularoApiClient apiClient;
+    private final DocumentsApiClient apiClient;
     private final TableFormatter tableFormatter;
     private final JsonFormatter jsonFormatter;
 
@@ -59,7 +59,7 @@ public class DocumentsCmd implements Runnable {
     private String format;
 
     @Autowired
-    public DocumentsCmd(CircularoApiClient apiClient, TableFormatter tableFormatter, JsonFormatter jsonFormatter) {
+    public DocumentsCmd(DocumentsApiClient apiClient, TableFormatter tableFormatter, JsonFormatter jsonFormatter) {
         this.apiClient = apiClient;
         this.tableFormatter = tableFormatter;
         this.jsonFormatter = jsonFormatter;

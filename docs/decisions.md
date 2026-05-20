@@ -38,3 +38,7 @@
 **Decision**: Establish a highly cohesive, non-reflective `OutputFormatter` interface mapping specific domain models to concrete formatter implementations (`JsonFormatter` and `TableFormatter`).
 **Consequences**: Avoids complex runtime generic reflection that slows down GraalVM AOT compilation. Ensures output consistency across repeated runs, enables trivial integration of future formats, and guarantees stable machine-readable automation pipelines.
 
+## REST API Client Separation of Concerns
+**Context**: Combining core HTTP connections, authentication injection, and deserialization handling with domain-specific endpoint definitions in a single client creates a monolithic class that becomes messy and violates the single responsibility principle as new endpoints are added.
+**Decision**: Refactor the API layer into a core `BaseCircularoApiClient` and domain-specific clients (`UsersApiClient`, `DocumentsApiClient`, `ReportsApiClient`), registering reflection bindings on each concern class rather than globally.
+**Consequences**: Increases readability and cohesion. Localizes GraalVM ahead-of-time (AOT) reflection annotations to the specific classes using them. Promotes simpler unit testing by allowing developers to mock/stub only the specific API clients required by individual commands.

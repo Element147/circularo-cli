@@ -20,7 +20,7 @@ import java.util.concurrent.Executor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CircularoApiClientTest {
+class BaseCircularoApiClientTest {
 
     @Test
     void sendRequest_happyPath_injectsTokenAndBaseUrl() {
@@ -29,7 +29,7 @@ class CircularoApiClientTest {
         StubHttpResponse stubResponse = new StubHttpResponse(200, "{\"status\":\"ok\"}", null);
         StubHttpClient httpClient = new StubHttpClient(stubResponse);
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("api/v1/users/search")
                 .GET()
@@ -56,7 +56,7 @@ class CircularoApiClientTest {
         StubHttpResponse stubResponse = new StubHttpResponse(200, "ok", null);
         StubHttpClient httpClient = new StubHttpClient(stubResponse);
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/search?q=test")
                 .GET()
@@ -78,7 +78,7 @@ class CircularoApiClientTest {
         StubHttpResponse stubResponse = new StubHttpResponse(400, "Bad Request", null);
         StubHttpClient httpClient = new StubHttpClient(stubResponse);
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/endpoint")
                 .GET()
@@ -99,7 +99,7 @@ class CircularoApiClientTest {
         StubHttpResponse stubResponse = new StubHttpResponse(401, "Unauthorized", null);
         StubHttpClient httpClient = new StubHttpClient(stubResponse);
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/endpoint")
                 .GET()
@@ -120,7 +120,7 @@ class CircularoApiClientTest {
         StubHttpResponse stubResponse = new StubHttpResponse(403, "Forbidden", null);
         StubHttpClient httpClient = new StubHttpClient(stubResponse);
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/endpoint")
                 .GET()
@@ -141,7 +141,7 @@ class CircularoApiClientTest {
         StubHttpResponse stubResponse = new StubHttpResponse(503, "Service Unavailable", null);
         StubHttpClient httpClient = new StubHttpClient(stubResponse);
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/endpoint")
                 .GET()
@@ -162,7 +162,7 @@ class CircularoApiClientTest {
         StubHttpResponse stubResponse = new StubHttpResponse(404, "Not Found", null);
         StubHttpClient httpClient = new StubHttpClient(stubResponse);
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/endpoint")
                 .GET()
@@ -183,7 +183,7 @@ class CircularoApiClientTest {
         StubConfigLoader configLoader = new StubConfigLoader("https://api.circularo.com", "token");
         StubHttpClient httpClient = new StubHttpClient(new IOException("Simulated network timeout"));
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/endpoint")
                 .GET()
@@ -203,7 +203,7 @@ class CircularoApiClientTest {
         StubConfigLoader configLoader = new StubConfigLoader("https://api.circularo.com", "token");
         StubHttpClient httpClient = new StubHttpClient(new InterruptedException("Simulated thread interruption"));
 
-        CircularoApiClient apiClient = new CircularoApiClient(configLoader, httpClient);
+        BaseCircularoApiClient apiClient = new BaseCircularoApiClient(configLoader, httpClient);
 
         HttpRequest request = apiClient.newRequestBuilder("/endpoint")
                 .GET()

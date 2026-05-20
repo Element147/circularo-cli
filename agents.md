@@ -35,7 +35,8 @@ Before executing any significant task or developing a new feature, you MUST:
 1. Create a numbered implementation plan inside the `docs/plans/` directory (e.g., `0002-new-feature.md`).
 2. Include the **exact prompt** provided by the user that triggered the plan at the top of the document.
 3. Detail the steps, architectural decisions, and expected outcome.
-4. When introducing or modifying any CLI command, subcommand, or option, you MUST update both the Picocli command class annotations/help messages and the User Manual (`docs/user_manual.md`) to keep them in sync as dual sources of truth.
+4. Always record the following three items in the plan document as a historical log: the triggering user prompt, the proposed technical design/steps, and a post-execution task checklist displaying the completion status of all items.
+5. When introducing or modifying any CLI command, subcommand, or option, you MUST update both the Picocli command class annotations/help messages and the User Manual (`docs/user_manual.md`) to keep them in sync as dual sources of truth.
 This ensures a Git-tracked backward audit of how solutions were derived.
 
 ## 4. Architectural Constraints
@@ -63,6 +64,7 @@ Before executing ANY prompt, analyze the user's request and the files in context
 - **Execute Skill [Native Java Client]:** Exclusively use `java.net.http.HttpClient`. DO NOT import Retrofit, OkHttp, or Apache.
 - **Execute Skill [Resilience]:** Always wrap calls in try-catch blocks handling `IOException` and `InterruptedException`. Map HTTP 4xx/5xx to a custom `CircularoException`.
 - **Execute Skill [API Contract Driven]:** Always use `docs/api-1.yaml` as the absolute source of truth for REST API endpoints. Read this Swagger documentation to fully understand the request/response schema before implementing any API call.
+- **Execute Skill [Separate API Concerns]:** All new REST API endpoints must be placed in a dedicated `*ApiClient` class representing their entity domain, delegating core HTTP, serialization, and authentication features to the shared `BaseCircularoApiClient`.
 
 ### 🟢 TRIGGER: Exception Handling
 
