@@ -11,29 +11,18 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.io.TempDir;
+
 class ConfigLoaderTest {
 
     private ConfigLoader configLoader;
     private Path tempEnvFile;
 
     @BeforeEach
-    void setUp() {
+    void setUp(@TempDir Path tempDir) {
         configLoader = new ConfigLoader();
-        tempEnvFile = Path.of(".env");
-        cleanupEnvFile();
-    }
-
-    @AfterEach
-    void tearDown() {
-        cleanupEnvFile();
-    }
-
-    private void cleanupEnvFile() {
-        try {
-            Files.deleteIfExists(tempEnvFile);
-        } catch (IOException e) {
-            // Suppress
-        }
+        tempEnvFile = tempDir.resolve(".env");
+        configLoader.setOverrideEnvPath(tempEnvFile);
     }
 
     @Test

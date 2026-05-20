@@ -115,11 +115,24 @@ public class ConfigLoader {
         return DEFAULT_API_URL;
     }
 
+    private Path overrideEnvPath; // For testing
+
+    void setOverrideEnvPath(Path overrideEnvPath) {
+        this.overrideEnvPath = overrideEnvPath;
+    }
+
     /**
      * Loads variables from a .env file located next to the executable or in the CWD.
      */
     private Properties loadEnvFile() {
         Properties envProps = new Properties();
+
+        if (overrideEnvPath != null) {
+            if (Files.exists(overrideEnvPath)) {
+                loadEnvFileIntoProperties(overrideEnvPath, envProps);
+            }
+            return envProps;
+        }
 
         // 1. Check directory containing the executing command/binary (ProcessHandle)
         Path execDir = getExecutableDirectory();
