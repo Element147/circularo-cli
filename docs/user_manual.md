@@ -98,7 +98,48 @@ Use the `-q` or `--query` option to filter your documents.
 
 ---
 
-## 6. Formatting Outputs (Tables vs JSON)
+## 6. Searching for Workflow Reports (The `reports` Command)
+
+The `reports` command queries the Circularo document workflow database to generate detailed reports about the oběh (circulation) of documents, showing processed, waiting, and total recipient statistics.
+
+### Basic command (Lists all reports):
+```powershell
+circularo-cli reports
+```
+
+### Filtering Search Results:
+Use the `-q` or `--query` option to filter workflow reports by creator, sender, or document title.
+
+| Goal | Example Command |
+| :--- | :--- |
+| **Search by Document Title** | `circularo-cli reports -q "title:\"NDA Agreement.pdf\""` |
+| **Search by Owner/Creator** | `circularo-cli reports -q "owner:Lubos*"` |
+| **Search by Sender** | `circularo-cli reports -q "sender:Lubos*"` |
+| **Combined Search** *(reports owned and sent by Lubos)* | `circularo-cli reports -q "owner:Lubos* AND sender:Lubos*"` |
+
+---
+
+## 7. Searching and Filtering Transactions (The `transactions` Command)
+
+The `transactions` command is tailored to inspect and track specific document workflow transactions, including start dates, end dates, duration, reasons, and transaction state.
+
+### Basic command (Lists all transactions):
+```powershell
+circularo-cli transactions
+```
+
+### Filtering by Transaction State:
+Use the `-s` or `--state` option to filter results by specific transaction states (e.g. `completed`, `inprogress`, `draft`, `cancelled`).
+
+| Goal | Example Command |
+| :--- | :--- |
+| **List Completed Transactions** | `circularo-cli transactions --state completed` |
+| **List In-Progress Transactions** | `circularo-cli transactions --state inprogress` |
+| **Search and Filter by State** *(draft invoices)* | `circularo-cli transactions -q "title:Invoice*" --state draft` |
+
+---
+
+## 8. Formatting Outputs (Tables vs JSON)
 
 By default, the tool displays results in a **Table** grid which is easy for humans to read. 
 
@@ -116,7 +157,7 @@ circularo-cli users --format json
 
 ---
 
-## 7. Troubleshooting / Common Problems
+## 9. Troubleshooting / Common Problems
 
 ### ❌ Error: "Invalid credentials" or HTTP status `401`
 * **What it means:** The security token you provided in `.env` is either expired, incorrect, or missing.

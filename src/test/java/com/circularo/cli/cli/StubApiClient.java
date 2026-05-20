@@ -3,6 +3,7 @@ package com.circularo.cli.cli;
 import com.circularo.cli.api.CircularoApiClient;
 import com.circularo.cli.model.User;
 import com.circularo.cli.model.Document;
+import com.circularo.cli.model.WorkflowReport;
 
 import java.net.http.HttpClient;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 class StubApiClient extends CircularoApiClient {
     private List<User> stubUsers;
     private List<Document> stubDocs;
+    private List<WorkflowReport> stubReports;
     private RuntimeException exceptionToThrow;
 
     public StubApiClient() {
@@ -27,6 +29,10 @@ class StubApiClient extends CircularoApiClient {
 
     public void setStubDocs(List<Document> docs) {
         this.stubDocs = docs;
+    }
+
+    public void setStubReports(List<WorkflowReport> reports) {
+        this.stubReports = reports;
     }
 
     public void setException(RuntimeException ex) {
@@ -47,5 +53,13 @@ class StubApiClient extends CircularoApiClient {
             throw exceptionToThrow;
         }
         return stubDocs;
+    }
+
+    @Override
+    public List<WorkflowReport> searchReports(String query) {
+        if (exceptionToThrow != null) {
+            throw exceptionToThrow;
+        }
+        return stubReports;
     }
 }

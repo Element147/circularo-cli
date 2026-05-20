@@ -3,6 +3,7 @@ package com.circularo.cli.format;
 import com.circularo.cli.model.User;
 import com.circularo.cli.model.Document;
 import com.circularo.cli.model.Workflow;
+import com.circularo.cli.model.WorkflowReport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
@@ -15,7 +16,7 @@ import java.util.List;
  * Produces structured, machine-readable, pretty-printed representations of the domain models.
  */
 @Component
-@RegisterReflectionForBinding({User.class, Document.class, Workflow.class})
+@RegisterReflectionForBinding({User.class, Document.class, Workflow.class, WorkflowReport.class})
 public class JsonFormatter implements OutputFormatter {
 
     private final ObjectMapper objectMapper;
@@ -40,6 +41,24 @@ public class JsonFormatter implements OutputFormatter {
             return objectMapper.writeValueAsString(documents);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize documents to JSON", e);
+        }
+    }
+
+    @Override
+    public String formatReports(List<WorkflowReport> reports) {
+        try {
+            return objectMapper.writeValueAsString(reports);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize reports to JSON", e);
+        }
+    }
+
+    @Override
+    public String formatTransactions(List<WorkflowReport> transactions) {
+        try {
+            return objectMapper.writeValueAsString(transactions);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize transactions to JSON", e);
         }
     }
 }

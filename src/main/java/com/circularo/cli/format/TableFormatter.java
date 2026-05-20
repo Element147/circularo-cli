@@ -2,6 +2,7 @@ package com.circularo.cli.format;
 
 import com.circularo.cli.model.User;
 import com.circularo.cli.model.Document;
+import com.circularo.cli.model.WorkflowReport;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -50,6 +51,54 @@ public class TableFormatter implements OutputFormatter {
             data[i][2] = getOrEmpty(doc.type());
             data[i][3] = getOrEmpty(doc.date());
             data[i][4] = doc.workflow() != null ? getOrEmpty(doc.workflow().shareStateName()) : "N/A";
+        }
+
+        return renderTable(headers, data);
+    }
+
+    @Override
+    public String formatReports(List<WorkflowReport> reports) {
+        if (reports == null || reports.isEmpty()) {
+            return "No reports found.";
+        }
+
+        String[] headers = {"Document ID", "Title", "Owner", "Sender", "Recipients (P/W/T)"};
+        String[][] data = new String[reports.size()][5];
+
+        for (int i = 0; i < reports.size(); i++) {
+            WorkflowReport report = reports.get(i);
+            data[i][0] = getOrEmpty(report.documentId());
+            data[i][1] = getOrEmpty(report.documentTitle());
+            data[i][2] = getOrEmpty(report.owner());
+            data[i][3] = getOrEmpty(report.sender());
+            
+            int processed = report.totalProcessed() != null ? report.totalProcessed() : 0;
+            int waiting = report.totalWaitingFor() != null ? report.totalWaitingFor() : 0;
+            int total = report.totalRecipients() != null ? report.totalRecipients() : 0;
+            data[i][4] = String.format("%d/%d/%d", processed, waiting, total);
+        }
+
+        return renderTable(headers, data);
+    }
+
+    @Override
+    public String formatTransactions(List<WorkflowReport> transactions) {
+        if (transactions == null || transactions.isEmpty()) {
+            return "No transactions found.";
+        }
+
+        String[] headers = {"Document ID", "Title", "Start Date", "End Date", "State", "Duration (s)", "End Reason"};
+        String[][] data = new String[transactions.size()][7];
+
+        for (int i = 0; i < transactions.size(); i++) {
+            WorkflowReport tx = transactions.get(i);
+            data[i][0] = getOrEmpty(tx.documentId());
+            data[i][1] = getOrEmpty(tx.documentTitle());
+            data[i][2] = getOrEmpty(tx.transactionStartDate());
+            data[i][3] = getOrEmpty(tx.transactionEndDate());
+            data[i][4] = getOrEmpty(tx.shareStateName());
+            data[i][5] = tx.transactionDuration() != null ? String.valueOf(tx.transactionDuration()) : "";
+            data[i][6] = getOrEmpty(tx.transactionEndReason());
         }
 
         return renderTable(headers, data);

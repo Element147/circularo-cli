@@ -9,6 +9,8 @@ import com.circularo.cli.model.UserSearchResponse;
 import com.circularo.cli.model.Document;
 import com.circularo.cli.model.DocumentSearchResponse;
 import com.circularo.cli.model.DocumentSearchResultWrapper;
+import com.circularo.cli.model.WorkflowReport;
+import com.circularo.cli.model.WorkflowReportSearchResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 
@@ -34,6 +36,8 @@ import java.util.Map;
     Document.class, 
     DocumentSearchResponse.class, 
     DocumentSearchResultWrapper.class,
+    WorkflowReport.class,
+    WorkflowReportSearchResponse.class,
     java.util.Map.class,
     java.util.HashMap.class,
     java.util.List.class,
@@ -248,6 +252,35 @@ public class CircularoApiClient {
                     .toList();
         } catch (IOException e) {
             throw new CircularoException("Failed to serialize/deserialize document search payload", e);
+        }
+    }
+
+    /**
+     * Searches for Circularo document workflow reports using the Elasticsearch syntax query.
+     */
+    public List<WorkflowReport> searchReports(String query) {
+        try {
+            Map<String, Object> payload = new HashMap<>();
+            Map<String, Object> queryMap = new HashMap<>();
+            if (query != null && !query.isBlank()) {
+                Map<String, Object> queryStringMap = new HashMap<>();
+                queryStringMap.put("query", query);
+                Map<String, Object> esQueryMap = new HashMap<>();
+                esQueryMap.put("query_string", queryStringMap);
+                queryMap.put("esQuery", java.util.List.of(esQueryMap));
+            }
+            payload.put("query", queryMap);
+
+            String body = objectMapper.writeValueAsString(payload);
+            HttpRequest request = newRequestBuilder("search/reports")
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+            HttpResponse<String> response = sendRequest(request);
+            WorkflowReportSearchResponse searchResponse = objectMapper.readValue(response.body(), WorkflowReportSearchResponse.class);
+            return searchResponse.results() != null ? searchResponse.results() : java.util.List.of();
+        } catch (IOException e) {
+            throw new CircularoException("Failed to serialize/deserialize workflow report search payload", e);
         }
     }
 }
