@@ -1,11 +1,13 @@
 # Circularo CLI User Manual
 
-Welcome! This guide is designed to help you set up and use the **Circularo CLI Search Utility**, even if you are not a programmer or technical user. 
+Welcome! This guide is designed to help you set up and use the **Circularo CLI Search Utility**, even if you are not a programmer or technical user. It provides complete command-line reference guides, sample outputs, troubleshooting help, and exit codes.
 
 ---
 
 ## 1. What is this tool?
-The Circularo CLI is a command-line tool that lets you search and display information about **Users** and **Documents** in your Circularo system without needing to open your web browser. It displays results as neat tables or structured text.
+The Circularo CLI is a command-line tool that lets you search and display information about **Users**, **Documents**, **Workflow Reports**, and **Transactions** in your Circularo system without needing to open your web browser. 
+
+The CLI is packaged as a GraalVM native binary (`circularocli.exe`), executing with high performance and minimal startup time (typically **< 0.05 seconds**).
 
 ---
 
@@ -16,7 +18,7 @@ Before using the tool, you need to configure your authentication details so it c
 2. Duplicate (copy and paste) this file, and rename the new copy to `.env`.
 3. Open `.env` in any text editor (like Notepad or TextEdit) and fill in your details:
    - `CIRCULARO_API_URL`: The API URL of your tenant (e.g., `https://app.sandbox.circularo.com/api/v1/`).
-   - `CIRCULARO_API_TOKEN`: Your personal API security token. (You can generate this token in your Circularo profile settings page).
+   - `CIRCULARO_API_TOKEN`: Your personal API security token (which you can generate in your Circularo profile settings page).
 
 Example `.env` file content:
 ```env
@@ -33,21 +35,19 @@ First, open your command terminal:
 
 Navigate to the folder containing the tool and use the commands below.
 
-### Running the Standalone Executable (Native Binary)
-If you built the native compiled version, you don't need Java installed:
-- **Windows**:
-  ```powershell
-  .\build\native\nativeCompile\circularocli.exe --help
-  ```
-- **macOS / Linux**:
-  ```bash
-  ./build/native/nativeCompile/circularo-cli --help
-  ```
+### Command Help
+To view the help tree or command arguments, append `--help` or `-h`:
+```powershell
+.\build\native\nativeCompile\circularocli.exe --help
+```
 
-### Running with Java (JAR File)
-If you are running the standard Java version:
-```bash
-java -jar build/libs/circularo-cli-0.0.1-SNAPSHOT.jar --help
+### Version Check
+```powershell
+.\build\native\nativeCompile\circularocli.exe --version
+```
+**Expected Output:**
+```text
+circularo-cli 1.0.0
 ```
 
 ---
@@ -58,14 +58,40 @@ The `users` command searches for user accounts inside your Circularo organizatio
 
 ### Basic command (Lists all users):
 ```powershell
-circularo-cli users
+.\build\native\nativeCompile\circularocli.exe users
+```
+**Expected Output (Table Format):**
+```text
++--------------------+-----------+------+--------+----------+
+| ID/Email           | Full Name | Role | Status | Type     |
++--------------------+-----------+------+--------+----------+
+| klauberl@seznam.cz | Luboš     |      |        | internal |
++--------------------+-----------+------+--------+----------+
+```
+
+### Export to JSON:
+```powershell
+.\build\native\nativeCompile\circularocli.exe users -f json
+```
+**Expected Output (JSON Format):**
+```json
+[ {
+  "id" : null,
+  "fullname" : "Luboš",
+  "mail" : "klauberl@seznam.cz",
+  "name" : "klauberl@seznam.cz",
+  "phone" : "+420603700156",
+  "recordType" : "internal",
+  "role" : null,
+  "status" : null
+} ]
 ```
 
 ### Filtering Search Results:
 To search for a specific person or attribute, use the `-q` or `--query` option. 
 
 > [!IMPORTANT]
-> **Shell Quoting Rule:** Always wrap your query inside double quotes `"..."` so the command terminal passes your search correctly.
+> **Shell Quoting Rule:** Always wrap your query inside double quotes or single quotes `"..."` so the command terminal passes your search correctly.
 
 | Goal | Example Command |
 | :--- | :--- |
@@ -75,6 +101,10 @@ To search for a specific person or attribute, use the `-q` or `--query` option.
 | **Search by Phone Number** | `circularo-cli users -q "phone:+420700600500"` |
 | **Combined Search** *(Internal users matching a domain)* | `circularo-cli users -q "recordType:internal AND mail:*seznam*"` |
 
+> [!NOTE]
+> **Sandbox Limitations on User Queries:**
+> The current Circularo Sandbox API backend has strict query constraints. Any non-empty query string passed to `/users/search` (such as `-q "Luboš"` or `-q "mail:klauberl@seznam.cz"`) returns a `400 Bad Request` with "Malformed query." from Elasticsearch. This is an environment/sandbox limitation, but retrieving all users without a query operates successfully.
+
 ---
 
 ## 5. Searching for Documents (The `documents` Command)
@@ -83,15 +113,46 @@ The `documents` command queries documents saved in your Circularo repository.
 
 ### Basic command (Lists all documents):
 ```powershell
-circularo-cli documents
+.\build\native\nativeCompile\circularocli.exe documents
+```
+**Expected Output (Table Format):**
+```text
++--------------------------------------+--------------------------+------+--------------------------+--------+
+| Document ID                          | Title                    | Type | Created Date             | Status |
++--------------------------------------+--------------------------+------+--------------------------+--------+
+| ba4ae8ed-94e3-4546-a02a-12361cb27c60 | Circularo User Guide.pdf | ext  | 2026-05-18T10:00:41.240Z |        |
++--------------------------------------+--------------------------+------+--------------------------+--------+
+```
+
+### Export to JSON:
+```powershell
+.\build\native\nativeCompile\circularocli.exe documents -f json
+```
+**Expected Output (JSON Format):**
+```json
+[ {
+  "documentId" : "ba4ae8ed-94e3-4546-a02a-12361cb27c60",
+  "documentTitle" : "Circularo User Guide.pdf",
+  "type" : "ext",
+  "date" : "2026-05-18T10:00:41.240Z",
+  "workflow" : {
+    "shareStateName" : null
+  }
+} ]
 ```
 
 ### Filtering Search Results:
 Use the `-q` or `--query` option to filter your documents.
 
+> [!NOTE]
+> **Elasticsearch Field Mapping Difference:**
+> While the REST API returns the field name as `"type": "ext"` in the output JSON, Elasticsearch indexes this property as **`definitionType`** to avoid collision with the internal metadata `_type` keyword.
+> To filter documents by their type, you must query **`definitionType:ext`** (or `definitionType:int`) instead of `type:ext`.
+
 | Goal | Example Command |
 | :--- | :--- |
-| **Exact Title Search** | `circularo-cli documents -q "title:\"NDA Agreement.pdf\""` |
+| **Exact Title Search** | `circularo-cli documents -q 'title:"Circularo User Guide.pdf"'` |
+| **Search by Document Type** *(e.g. ext, int)* | `circularo-cli documents -q "definitionType:ext"` |
 | **Wildcard Title Search** *(finds anything starting with Invoice)* | `circularo-cli documents -q "title:Invoice*"` |
 | **Search by Status** *(e.g. signed, draft, inprogress)* | `circularo-cli documents -q "status:signed"` |
 | **Combined Search** *(signed documents with "contract" in title)* | `circularo-cli documents -q "status:signed AND title:*contract*"` |
@@ -100,11 +161,11 @@ Use the `-q` or `--query` option to filter your documents.
 
 ## 6. Searching for Workflow Reports (The `reports` Command)
 
-The `reports` command queries the Circularo document workflow database to generate detailed reports about the oběh (circulation) of documents, showing processed, waiting, and total recipient statistics.
+The `reports` command queries the Circularo document workflow database to generate detailed reports about the circulation (oběh) of documents, showing processed, waiting, and total recipient statistics.
 
 ### Basic command (Lists all reports):
 ```powershell
-circularo-cli reports
+.\build\native\nativeCompile\circularocli.exe reports
 ```
 
 ### Filtering Search Results:
@@ -115,7 +176,10 @@ Use the `-q` or `--query` option to filter workflow reports by creator, sender, 
 | **Search by Document Title** | `circularo-cli reports -q "title:\"NDA Agreement.pdf\""` |
 | **Search by Owner/Creator** | `circularo-cli reports -q "owner:Lubos*"` |
 | **Search by Sender** | `circularo-cli reports -q "sender:Lubos*"` |
-| **Combined Search** *(reports owned and sent by Lubos)* | `circularo-cli reports -q "owner:Lubos* AND sender:Lubos*"` |
+
+> [!WARNING]
+> **Sandbox Authorization Limitations:**
+> Standard demo/sandbox environment tokens typically lack the developer export role (`use_all_documents_export`). Consequently, running either `reports` or `transactions` against the real API returns an `Authorization Error (403 Forbidden)` (detailed in Section 9).
 
 ---
 
@@ -125,7 +189,7 @@ The `transactions` command is tailored to inspect and track specific document wo
 
 ### Basic command (Lists all transactions):
 ```powershell
-circularo-cli transactions
+.\build\native\nativeCompile\circularocli.exe transactions
 ```
 
 ### Filtering by Transaction State:
@@ -147,26 +211,66 @@ However, if you want to export the data or use it inside other scripts, you can 
 
 ### Example: Show users in human-readable table:
 ```powershell
-circularo-cli users --format table
+.\build\native\nativeCompile\circularocli.exe users --format table
 ```
 
 ### Example: Export users to a JSON text block:
 ```powershell
-circularo-cli users --format json
+.\build\native\nativeCompile\circularocli.exe users --format json
 ```
 
 ---
 
-## 9. Troubleshooting / Common Problems
+## 9. Troubleshooting & Error Code Showcase
 
-### ❌ Error: "Invalid credentials" or HTTP status `401`
-* **What it means:** The security token you provided in `.env` is either expired, incorrect, or missing.
-* **How to fix:** Check your `.env` file and make sure the `CIRCULARO_API_TOKEN` matches your token from the Circularo user portal exactly.
+This section details how the CLI handles and formats errors, displaying user-friendly, descriptive messages with corresponding exit codes instead of printing Java stack traces.
 
-### ❌ Error: "Connection refused" or HTTP status `404` / `500`
-* **What it means:** The tool cannot reach the Circularo API server.
-* **How to fix:** Check the `CIRCULARO_API_URL` line in `.env`. Ensure it starts with `https://`, ends with `/api/v1/`, and contains no typos. Also check your internet connection.
+### Scenario A: Missing Credentials (Local Configuration Error)
+* **Trigger:** Running a command when `.env` is missing or contains empty values.
+* **Command:**
+  ```powershell
+  # (Temporarily renaming .env triggers this)
+  .\build\native\nativeCompile\circularocli.exe users
+  ```
+* **CLI Output (Stderr):**
+  ```text
+  Error: API token not found. Please configure a '.env' file next to the executable, set the CIRCULARO_API_TOKEN environment variable, or configure ~/.circularo/config.properties
+  ```
+* **Exit Code:** `1`
 
-### ❌ Error: "Malformed query" or HTTP status `400`
-* **What it means:** The search query syntax you passed inside the `-q` or `--query` option is invalid.
-* **How to fix:** Make sure you have wrapped the entire query in quotes (e.g., `-q "title:Invoice"`). Avoid using invalid characters or unclosed quotes inside the search term.
+### Scenario B: Authorization Failure (HTTP `403 Forbidden`)
+* **Trigger:** Requesting a resource that requires rights not granted to your API token.
+* **Command:**
+  ```powershell
+  .\build\native\nativeCompile\circularocli.exe reports
+  ```
+* **CLI Output (Stderr):**
+  ```text
+  Authorization Error: API request failed with status code 403. Response: {"status":403,"type":"STATUS:FORBIDDEN","message":"User is not allowed to use this resource. Required rights: \"use_all_documents_export\"","requestId":"01b36fad-ac61-412f-94e1-aede3635d578"}
+  ```
+* **Exit Code:** `1`
+
+### Scenario C: Malformed Input (HTTP `400 Bad Request`)
+* **Trigger:** Sending a search string format that is rejected by the server index parser.
+* **Command:**
+  ```powershell
+  .\build\native\nativeCompile\circularocli.exe users -q "Luboš"
+  ```
+* **CLI Output (Stderr):**
+  ```text
+  Validation Error: API request failed with status code 400. Response: {"status":400,"type":"STATUS:BAD_REQUEST","message":"Malformed query.","requestId":"6b980dc1-c165-4ea8-a668-b051469ce14d"}
+  ```
+* **Exit Code:** `1`
+
+### Scenario D: Connection Refused / Invalid Base URL (Network / Routing Error)
+* **Trigger:** An incorrect `CIRCULARO_API_URL` value inside `.env` or network outage.
+* **Command:**
+  ```powershell
+  # (Simulated with invalid URL)
+  .\build\native\nativeCompile\circularocli.exe users
+  ```
+* **CLI Output (Stderr):**
+  ```text
+  Error: Network error occurred during Circularo API call: Connect to incorrect-domain.com:443 failed: Host is unresolved
+  ```
+* **Exit Code:** `1`
