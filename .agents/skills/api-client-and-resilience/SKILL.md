@@ -10,7 +10,7 @@ description: Guidance on using the native Java HTTP client, REST API integration
 - **DO NOT** import external libraries like Retrofit, OkHttp, or Apache HTTP client. This keeps the application lightweight and compatible with GraalVM ahead-of-time (AOT) compilation.
 
 ## 2. API Contract-Driven Development
-- Always use `docs/api-1.yaml` (Swagger/OpenAPI definition) as the absolute source of truth for Circularo REST API endpoints.
+- Always use `docs/api-1-full.yaml` (the full complete Swagger/OpenAPI specification) as the absolute source of truth for Circularo REST API endpoints, while using `docs/api-1.yaml` as the API workflow documentation for integrators.
 - Verify request parameters, paths, query variables, and response structures against the specification before writing client code.
 
 ## 3. Resilience

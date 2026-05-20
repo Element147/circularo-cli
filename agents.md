@@ -63,7 +63,7 @@ Before executing ANY prompt, analyze the user's request and the files in context
 
 - **Execute Skill [Native Java Client]:** Exclusively use `java.net.http.HttpClient`. DO NOT import Retrofit, OkHttp, or Apache.
 - **Execute Skill [Resilience]:** Always wrap calls in try-catch blocks handling `IOException` and `InterruptedException`. Map HTTP 4xx/5xx to a custom `CircularoException`.
-- **Execute Skill [API Contract Driven]:** Always use `docs/api-1.yaml` as the absolute source of truth for REST API endpoints. Read this Swagger documentation to fully understand the request/response schema before implementing any API call.
+- **Execute Skill [API Contract Driven]:** Always use `docs/api-1-full.yaml` as the absolute source of truth for the complete REST API specification, while using `docs/api-1.yaml` as the API workflow documentation for integrators. Read this Swagger documentation to fully understand the request/response schema before implementing any API call.
 - **Execute Skill [Separate API Concerns]:** All new REST API endpoints must be placed in a dedicated `*ApiClient` class representing their entity domain, delegating core HTTP, serialization, and authentication features to the shared `BaseCircularoApiClient`.
 
 ### 🟢 TRIGGER: Exception Handling

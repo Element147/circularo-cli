@@ -58,6 +58,9 @@ CIRCULARO_API_TOKEN=your_secure_token_here
 ```
 
 ## Repository Organization
+- **`docs`**: Contains user documentation, architecture decision records (ADRs), developer guidelines, and API contract specifications:
+  - `api-1.yaml`: API workflow documentation for integrators.
+  - `api-1-full.yaml`: Full, complete Circularo API specification.
 - **`cli`**: Contains Picocli command definitions and CLI entry points.
 - **`api`**: Contains the native `HttpClient` wrapper and typed exception hierarchy for resilient HTTP communication.
 - **`format`**: Contains output formatters (`JsonFormatter`, `TableFormatter`) for deterministic console output.
