@@ -20,7 +20,7 @@ class CircularoExecutionExceptionHandlerTest {
     private TableFormatter tableFormatter;
     private JsonFormatter jsonFormatter;
     private MarkdownFormatter markdownFormatter;
-    private UsersCmd usersCmd;
+    private UsersSearchCmd usersSearchCmd;
 
     @BeforeEach
     void setUp() {
@@ -28,7 +28,7 @@ class CircularoExecutionExceptionHandlerTest {
         tableFormatter = new TableFormatter();
         jsonFormatter = new JsonFormatter();
         markdownFormatter = new MarkdownFormatter();
-        usersCmd = new UsersCmd(apiClient, tableFormatter, jsonFormatter, markdownFormatter);
+        usersSearchCmd = new UsersSearchCmd(apiClient, tableFormatter, jsonFormatter, markdownFormatter);
     }
 
     @Test
@@ -36,7 +36,7 @@ class CircularoExecutionExceptionHandlerTest {
         apiClient.setException(new CircularoCredentialsException("Invalid token provided"));
 
         StringWriter err = new StringWriter();
-        CommandLine cmd = new CommandLine(usersCmd);
+        CommandLine cmd = new CommandLine(usersSearchCmd);
         cmd.setErr(new PrintWriter(err));
         cmd.setExecutionExceptionHandler(new CircularoExecutionExceptionHandler());
 
@@ -51,7 +51,7 @@ class CircularoExecutionExceptionHandlerTest {
         apiClient.setException(new RuntimeException("Something broke"));
 
         StringWriter err = new StringWriter();
-        CommandLine cmd = new CommandLine(usersCmd);
+        CommandLine cmd = new CommandLine(usersSearchCmd);
         cmd.setErr(new PrintWriter(err));
         cmd.setExecutionExceptionHandler(new CircularoExecutionExceptionHandler());
 

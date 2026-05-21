@@ -4,6 +4,7 @@ import com.circularo.cli.model.User;
 import com.circularo.cli.model.Document;
 import com.circularo.cli.model.WorkflowReport;
 import com.circularo.cli.model.WorkflowReportItem;
+import com.circularo.cli.model.UserModels;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -241,4 +242,119 @@ public class TableFormatter implements OutputFormatter {
     private String padRight(String s, int n) {
         return String.format("%-" + n + "s", s);
     }
+
+    @Override
+    public String formatGenericStatus(UserModels.GenericStatus status) {
+        if (status == null) return "No status returned.";
+        return renderTable(new String[]{"Status"}, new String[][]{{getOrEmpty(status.status())}});
+    }
+
+    @Override
+    public String formatBulkResponse(UserModels.BulkResponse response) {
+        if (response == null) return "No response returned.";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bulk Operation Summary:\n");
+        sb.append("  Total Count: ").append(response.count()).append("\n");
+        sb.append("  Errors Encountered: ").append(response.errors()).append("\n\n");
+        
+        List<UserModels.BulkResponseItem> items = response.items();
+        if (items != null && !items.isEmpty()) {
+            String[] headers = {"Item ID", "Status", "Message"};
+            String[][] data = new String[items.size()][3];
+            for (int i = 0; i < items.size(); i++) {
+                UserModels.BulkResponseItem item = items.get(i);
+                data[i][0] = getOrEmpty(item.id());
+                data[i][1] = item.status() != null ? String.valueOf(item.status()) : "";
+                data[i][2] = getOrEmpty(item.message());
+            }
+            sb.append(renderTable(headers, data));
+        } else {
+            sb.append("No item details returned.");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String formatUserRights(List<UserModels.UserRightItem> rights) {
+        if (rights == null || rights.isEmpty()) return "No user rights found.";
+        String[] headers = {"Right Name", "Group", "Description"};
+        String[][] data = new String[rights.size()][3];
+        for (int i = 0; i < rights.size(); i++) {
+            UserModels.UserRightItem item = rights.get(i);
+            data[i][0] = getOrEmpty(item.name());
+            data[i][1] = getOrEmpty(item.group());
+            data[i][2] = getOrEmpty(item.description());
+        }
+        return renderTable(headers, data);
+    }
+
+    @Override
+    public String formatUserActivation(UserModels.UserActivation activation) {
+        if (activation == null) return "No activation data.";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Account Activated: ").append(activation.accountActivated()).append("\n\n");
+        if (activation.user() != null) {
+            sb.append("User Details:\n");
+            sb.append(formatUsers(List.of(activation.user())));
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String formatUserResetToken(UserModels.UserResetToken resetToken) {
+        if (resetToken == null) return "No reset token data.";
+        String[] headers = {"Valid", "Email", "Expires"};
+        String[][] data = new String[][]{{
+            String.valueOf(resetToken.valid()),
+            getOrEmpty(resetToken.email()),
+            getOrEmpty(resetToken.expires())
+        }};
+        return renderTable(headers, data);
+    }
+
+    @Override
+    public String formatLoginResponse(UserModels.LoginResponse response) {
+        if (response == null) return "No login response.";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Login / Activation Token: ").append(getOrEmpty(response.token())).append("\n\n");
+        if (response.user() != null) {
+            sb.append("User Details:\n");
+            sb.append(formatUsers(List.of(response.user())));
+        }
+        if (response.rights() != null && !response.rights().isEmpty()) {
+            sb.append("\nRights:\n  ").append(String.join(", ", response.rights())).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String formatUserConfiguration(UserModels.UserConfiguration config) {
+        if (config == null) return "No configuration data.";
+        String[] headers = {"Setting", "Value"};
+        String[][] data = new String[][]{
+            {"Language", getOrEmpty(config.language())},
+            {"View", getOrEmpty(config.view())},
+            {"Scheduler Enabled", String.valueOf(config.scheduler())},
+            {"Navigation Open", String.valueOf(config.navigationOpen())}
+        };
+        return renderTable(headers, data);
+    }
+
+    @Override
+    public String formatPasswordStrength(UserModels.PasswordStrength strength) {
+        if (strength == null) return "No password strength details.";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Password Strength Score: ").append(strength.score()).append("/4\n");
+        if (strength.warning() != null && !strength.warning().isBlank()) {
+            sb.append("Warning: ").append(strength.warning()).append("\n");
+        }
+        if (strength.suggestions() != null && !strength.suggestions().isEmpty()) {
+            sb.append("Suggestions:\n");
+            for (String suggestion : strength.suggestions()) {
+                sb.append("  - ").append(suggestion).append("\n");
+            }
+        }
+        return sb.toString();
+    }
 }
+

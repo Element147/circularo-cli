@@ -52,54 +52,181 @@ circularo-cli 1.0.0
 
 ---
 
-## 4. Searching for Users (The `users` Command)
+## 4. Managing Users (The `users` Command Group)
 
-The `users` command searches for user accounts inside your Circularo organization.
+The `users` command group provides comprehensive tools to search, retrieve, create, update, delete, and configure user accounts in your Circularo tenant.
 
-### Basic command (Lists all users):
+Running the base command displays all available subcommands:
 ```powershell
 .\build\native\nativeCompile\circularocli.exe users
 ```
-**Expected Output (Table Format):**
-```text
-+--------------------+-----------+------+--------+----------+
-| ID/Email           | Full Name | Role | Status | Type     |
-+--------------------+-----------+------+--------+----------+
-| klauberl@seznam.cz | Luboš     |      |        | internal |
-+--------------------+-----------+------+--------+----------+
-```
 
-### Export to JSON:
+### 4.1 Search & Retrieval
+
+#### Search Users (`search`)
+Queries the Circularo users database using Elasticsearch query_string syntax. If no query is provided, lists all users.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users -f json
-```
-**Expected Output (JSON Format):**
-```json
-[ {
-  "id" : null,
-  "fullname" : "Luboš",
-  "mail" : "klauberl@seznam.cz",
-  "name" : "klauberl@seznam.cz",
-  "phone" : "+420603700156",
-  "recordType" : "internal",
-  "role" : null,
-  "status" : null
-} ]
+# List all users (Table format)
+.\build\native\nativeCompile\circularocli.exe users search
+
+# Search for a specific user name or email
+.\build\native\nativeCompile\circularocli.exe users search -q "Lubo"
+
+# Export search results to JSON
+.\build\native\nativeCompile\circularocli.exe users search -q "mail:*@seznam.cz" -f json
 ```
 
-### Filtering Search Results:
-To search for a specific person or attribute, use the `-q` or `--query` option. 
+#### Get User by ID (`get`)
+Gets complete details for the user with the specified ID.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users get <id>
+```
 
-> [!IMPORTANT]
-> **Shell Quoting Rule:** Always wrap your query inside double quotes or single quotes `"..."` so the command terminal passes your search correctly.
+#### Get Simple User Info by Username (`get-by-username`)
+Retrieves simple user info using the username.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users get-by-username <username> --photo-size <large|medium|small>
+```
 
-| Goal | Example Command |
-| :--- | :--- |
-| **Simple Name Search** | `circularo-cli users -q "Lubo"` |
-| **Search by exact Email** | `circularo-cli users -q "mail:klauberl@seznam.cz"` |
-| **Wildcard Email Search** *(any address ending in a domain)* | `circularo-cli users -q "mail:*@seznam.cz"` |
-| **Search by Phone Number** | `circularo-cli users -q "phone:+420700600500"` |
-| **Combined Search** *(Internal users matching a domain)* | `circularo-cli users -q "recordType:internal AND mail:*seznam*"` |
+#### Get User Rights (`rights`)
+Displays the actions and access rights assigned to a user.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users rights <id> --detailed
+```
+
+### 4.2 Account CRUD Operations
+
+#### Create Users Bulk (`create`)
+Creates one or more new user accounts using a local JSON payload file.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users create --file ./new_users.json
+```
+
+#### Update Users Bulk (`update`)
+Updates properties of multiple users in bulk using a JSON payload file.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users update --file ./update_users.json
+```
+
+#### Update Single User (`update-single`)
+Modifies a single user's properties by ID, with optional active token disabling and optimistic locking versioning.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users update-single <id> --file ./user_properties.json --disable-active-tokens --version 1
+```
+
+#### Delete User (`delete`)
+Deletes the specified user account, with an optional username to reassign their resources to.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users delete <id> --reassign <username>
+```
+
+#### Register User (`register`)
+Self-registers a new user account with default settings.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users register --username joesmith --email joe@example.com --fullname "Joe Smith" --phone "+1234567890" --company "Acme Corp" --language "en"
+```
+
+### 4.3 Authentication & Security
+
+#### Activate User (`activate`)
+Activates a new user account. Requires setting a password. You can optionally upload a local profile photo.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users activate --password "MySecret123" --fullname "Lubos" --file ./avatar.png
+```
+
+#### Resend Activation Email (`resend-activation`)
+Resends the activation link/email to a newly created user.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users resend-activation <id> --tenant <tenant-name>
+```
+
+#### Check Activation Token (`check-activation`)
+Verifies the validity of the current user account activation token.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users check-activation
+```
+
+#### Change Password (`change-password`)
+Changes the password for a specific user ID.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users change-password <id> --password "NewSecr3t" --old-password "OldSecr3t"
+```
+
+#### Check Password Strength (`check-password`)
+Checks the strength of a proposed password.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users check-password --password "weakpass" --tenant <tenant-name>
+```
+
+#### Reset Password Request (`reset-password`)
+Submits a password reset request with a username, token code, and the new password.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users reset-password --username joesmith --code 987654 --password "NewPassword123"
+```
+
+#### Request Password Reset Link (`reset-password-username`)
+Initiates the password reset flow for a given username.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users reset-password-username --username joesmith --tenant <tenant-name>
+```
+
+#### Check Reset Token Validity (`check-reset-token`)
+Validates a password reset token.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users check-reset-token --token <reset-token>
+```
+
+### 4.4 Group Management
+
+#### Add User to Group (`add-group`)
+Adds a user to a security/permission group.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users add-group <id> <groupname>
+```
+
+#### Remove User from Group (`remove-group`)
+Removes a user from a security/permission group.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users remove-group <id> <groupname>
+```
+
+### 4.5 Profile Assets & Certificates
+
+#### Upload Profile Photo (`upload-photo`)
+Uploads a local image file as the user's profile photo.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users upload-photo <id> --file ./photo.jpg
+```
+
+#### Delete Profile Photo (`delete-photo`)
+Deletes the profile photo of a user.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users delete-photo <id>
+```
+
+#### Delete Signature Image (`delete-signature`)
+Deletes the user's saved hand-drawn signature image.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users delete-signature <id>
+```
+
+#### Delete Initials Image (`delete-initials`)
+Deletes the user's saved initials image.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users delete-initials <id>
+```
+
+#### Add User Certificate (`add-certificate`)
+Adds a certificate to a user profile, passing a local certificate file.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users add-certificate <id> --cert-name "SigningCert" --file ./cert.p12
+```
+
+#### Remove User Certificate (`remove-certificate`)
+Removes a certificate from a user profile by certificate ID.
+```powershell
+.\build\native\nativeCompile\circularocli.exe users remove-certificate <id> <certificateId>
+```
 
 > [!NOTE]
 > **Sandbox Limitations on User Queries:**
