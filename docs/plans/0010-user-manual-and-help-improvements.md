@@ -11,13 +11,13 @@
 ### 1. Repository Rules Update
 We will introduce a strict dual-synchronization rule to ensure both source-code command definitions (Picocli help) and the user manual are updated in tandem.
 
-#### [MODIFY] [agents.md](file:///c:/Git/circularo-cli/agents.md)
+#### [MODIFY] [agents.md](../../agents.md)
 - Update trigger rules or add a rule in `3. Implementation Plan Tracking (MANDATORY)` or section `5` to enforce documenting all new command parameters in the user manual.
 
 ### 2. User Manual Creation
 We will create a comprehensive, beginner-friendly Markdown manual in the documentation folder.
 
-#### [NEW] [user_manual.md](file:///c:/Git/circularo-cli/docs/user_manual.md)
+#### [NEW] [user_manual.md](../user_manual.md)
 - Write a non-programmer guide covering:
   - **Prerequisites**: Setting up `.env` (API URL & Token).
   - **Standard Run Commands**: Explain how to run the tool (Fat JAR and Native Binary).
@@ -29,19 +29,19 @@ We will create a comprehensive, beginner-friendly Markdown manual in the documen
 ### 3. README Reference
 Update `README.md` to point users to the manual.
 
-#### [MODIFY] [README.md](file:///c:/Git/circularo-cli/README.md)
+#### [MODIFY] [README.md](../../README.md)
 - Add a dedicated "User Manual" section near the top linking to `docs/user_manual.md`.
 
 ### 4. Interactive Console Help Enhancements
 Update Picocli `@Command` and `@Option` configurations in Java source files to make output help friendly and detailed.
 
-#### [MODIFY] [RootCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/RootCmd.java)
+#### [MODIFY] [RootCmd.java](../../src/main/java/com/circularo/cli/RootCmd.java)
 - Add detailed description header and sub-command usage quick examples.
 
-#### [MODIFY] [UsersCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/UsersCmd.java)
+#### [MODIFY] [UsersCmd.java](../../src/main/java/com/circularo/cli/cli/UsersCmd.java)
 - Expand command description, option descriptions, and add concrete examples of querying users in the console help output.
 
-#### [MODIFY] [DocumentsCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/DocumentsCmd.java)
+#### [MODIFY] [DocumentsCmd.java](../../src/main/java/com/circularo/cli/cli/DocumentsCmd.java)
 - Expand command description, option descriptions, and add concrete examples of querying documents in the console help output.
 
 ---

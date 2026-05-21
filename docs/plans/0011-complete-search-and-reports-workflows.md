@@ -22,11 +22,11 @@ Review the Circularo CLI repository against the `cli-search-utility-spec.pdf` sp
 
 Create new Jackson-annotated data models for the reports endpoint responses.
 
-#### [NEW] [WorkflowReport.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/WorkflowReport.java)
+#### [NEW] [WorkflowReport.java](../../src/main/java/com/circularo/cli/model/WorkflowReport.java)
 - Mapping to `responseSearchReportsSingle` schema.
 - Fields for document metadata, recipient statistics, and transaction details.
 
-#### [NEW] [WorkflowReportSearchResponse.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/WorkflowReportSearchResponse.java)
+#### [NEW] [WorkflowReportSearchResponse.java](../../src/main/java/com/circularo/cli/model/WorkflowReportSearchResponse.java)
 - Mapping to `responseSearchReportsMultiple` schema wrapper.
 - Fields: `results` (List of `WorkflowReport`), `total` (count).
 
@@ -34,7 +34,7 @@ Create new Jackson-annotated data models for the reports endpoint responses.
 
 ### 2. API Layer
 
-#### [MODIFY] [CircularoApiClient.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/api/CircularoApiClient.java)
+#### [MODIFY] [CircularoApiClient.java](../../src/main/java/com/circularo/cli/api/CircularoApiClient.java)
 - Register the new model classes for GraalVM AOT native reflection.
 - Add `searchReports(String query)` to query `/search/reports` endpoint via HTTP POST.
 
@@ -42,35 +42,35 @@ Create new Jackson-annotated data models for the reports endpoint responses.
 
 ### 3. Formatting Layer
 
-#### [MODIFY] [OutputFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/OutputFormatter.java)
+#### [MODIFY] [OutputFormatter.java](../../src/main/java/com/circularo/cli/format/OutputFormatter.java)
 - Declare `formatReports` and `formatTransactions` methods.
 
-#### [MODIFY] [TableFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/TableFormatter.java)
+#### [MODIFY] [TableFormatter.java](../../src/main/java/com/circularo/cli/format/TableFormatter.java)
 - Implement `formatReports` rendering fields: `Document ID`, `Title`, `Owner`, `Sender`, `Processed/Waiting/Total`.
 - Implement `formatTransactions` rendering fields: `Document ID`, `Title`, `Start Date`, `End Date`, `State`, `Duration (s)`, `End Reason`.
 
-#### [MODIFY] [JsonFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/JsonFormatter.java)
+#### [MODIFY] [JsonFormatter.java](../../src/main/java/com/circularo/cli/format/JsonFormatter.java)
 - Implement `formatReports` and `formatTransactions` using Jackson object mapping.
 
 ---
 
 ### 4. CLI / Command Layer
 
-#### [NEW] [ReportsCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/ReportsCmd.java)
+#### [NEW] [ReportsCmd.java](../../src/main/java/com/circularo/cli/cli/ReportsCmd.java)
 - Picocli sub-command for `reports` with `--query` and `--format` options.
 
-#### [NEW] [TransactionsCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/TransactionsCmd.java)
+#### [NEW] [TransactionsCmd.java](../../src/main/java/com/circularo/cli/cli/TransactionsCmd.java)
 - Picocli sub-command for `transactions` with `--query`, `--state`, and `--format` options.
 - Includes in-memory filtering by the `--state` parameter.
 
-#### [MODIFY] [RootCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/RootCmd.java)
+#### [MODIFY] [RootCmd.java](../../src/main/java/com/circularo/cli/RootCmd.java)
 - Register `ReportsCmd` and `TransactionsCmd` as subcommands.
 
 ---
 
 ### 5. Documentation & Verification
 
-#### [MODIFY] [user_manual.md](file:///c:/Git/circularo-cli/docs/user_manual.md)
+#### [MODIFY] [user_manual.md](../user_manual.md)
 - Document the new subcommands, flags, and usage examples.
 
 ---

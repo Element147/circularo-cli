@@ -22,11 +22,11 @@ Enhance the Circularo CLI's report-oriented workflows to fully satisfy the `cli-
 
 ### 1. Model Layer
 
-#### [NEW] [WorkflowReportItem.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/WorkflowReportItem.java)
+#### [NEW] [WorkflowReportItem.java](../../src/main/java/com/circularo/cli/model/WorkflowReportItem.java)
 - Map the JSON structure `responseSearchReportsSingleItem` from the OpenAPI specification `docs/api-1.yaml`.
 - Include properties: `user`, `shareType`, `date`, `seen`, `duration`, `expiration`, `reminder`, `dateOfReceivingTheAction`, `delegatedUser`, `lastAction`, `order`, `shareId`, `verification`.
 
-#### [MODIFY] [WorkflowReport.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/WorkflowReport.java)
+#### [MODIFY] [WorkflowReport.java](../../src/main/java/com/circularo/cli/model/WorkflowReport.java)
 - Add list deserialization properties:
   - `alreadyProcessed`: `List<WorkflowReportItem>`
   - `waitingFor`: `List<WorkflowReportItem>`
@@ -35,17 +35,17 @@ Enhance the Circularo CLI's report-oriented workflows to fully satisfy the `cli-
 
 ### 2. API / Registration Layer
 
-#### [MODIFY] [ReportsApiClient.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/api/ReportsApiClient.java)
+#### [MODIFY] [ReportsApiClient.java](../../src/main/java/com/circularo/cli/api/ReportsApiClient.java)
 - Update `@RegisterReflectionForBinding` to register `WorkflowReportItem.class` for reflection under AOT.
 
-#### [MODIFY] [JsonFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/JsonFormatter.java)
+#### [MODIFY] [JsonFormatter.java](../../src/main/java/com/circularo/cli/format/JsonFormatter.java)
 - Update `@RegisterReflectionForBinding` to register `WorkflowReportItem.class` for reflection under AOT.
 
 ---
 
 ### 3. Formatting Layer
 
-#### [NEW] [MarkdownFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/MarkdownFormatter.java)
+#### [NEW] [MarkdownFormatter.java](../../src/main/java/com/circularo/cli/format/MarkdownFormatter.java)
 - Implement `OutputFormatter` to format output models as Markdown tables.
 - Support `formatUsers`, `formatDocuments`, `formatReports`, and `formatTransactions`.
 - Handle rendering of verbose participant lists when reports/transactions are formatted with detail support.
@@ -54,20 +54,20 @@ Enhance the Circularo CLI's report-oriented workflows to fully satisfy the `cli-
 
 ### 4. CLI / Command Layer
 
-#### [MODIFY] [UsersCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/UsersCmd.java)
+#### [MODIFY] [UsersCmd.java](../../src/main/java/com/circularo/cli/cli/UsersCmd.java)
 - Update `--format` option documentation to include `md`.
 - Wire `MarkdownFormatter` and execute it when `md` format is selected.
 
-#### [MODIFY] [DocumentsCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/DocumentsCmd.java)
+#### [MODIFY] [DocumentsCmd.java](../../src/main/java/com/circularo/cli/cli/DocumentsCmd.java)
 - Update `--format` option documentation to include `md`.
 - Wire `MarkdownFormatter` and execute it when `md` format is selected.
 
-#### [MODIFY] [ReportsCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/ReportsCmd.java)
+#### [MODIFY] [ReportsCmd.java](../../src/main/java/com/circularo/cli/cli/ReportsCmd.java)
 - Add `--verbose` option to toggle detailed participants listing.
 - Update `--format` option documentation to include `md`.
 - Wire `MarkdownFormatter` and pass verbose state into formatters.
 
-#### [MODIFY] [TransactionsCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/TransactionsCmd.java)
+#### [MODIFY] [TransactionsCmd.java](../../src/main/java/com/circularo/cli/cli/TransactionsCmd.java)
 - Add `--verbose` option to toggle detailed participants listing.
 - Update `--format` option documentation to include `md`.
 - Wire `MarkdownFormatter` and pass verbose state into formatters.
@@ -76,7 +76,7 @@ Enhance the Circularo CLI's report-oriented workflows to fully satisfy the `cli-
 
 ### 5. Documentation & Manual
 
-#### [MODIFY] [user_manual.md](file:///c:/Git/circularo-cli/docs/user_manual.md)
+#### [MODIFY] [user_manual.md](../user_manual.md)
 - Document the new `--format md` options across all commands.
 - Document the `--verbose` flag on `reports` and `transactions` commands.
 - Provide usage examples.

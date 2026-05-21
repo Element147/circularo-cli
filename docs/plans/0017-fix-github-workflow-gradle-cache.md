@@ -60,7 +60,7 @@ I have this given error. Fix it."
 ## Proposed Technical Design/Steps
 
 1. **Remove `cache: 'gradle'` from GraalVM Setup**:
-   - In [.github/workflows/ci.yml](file:///c:/Git/circularo-cli/.github/workflows/ci.yml), edit the `Setup GraalVM 25` step to remove the `cache` property.
+   - In [.github/workflows/ci.yml](../../.github/workflows/ci.yml), edit the `Setup GraalVM 25` step to remove the `cache` property.
 
 2. **Add setup-gradle Action**:
    - Add `gradle/actions/setup-gradle@v4` action step right after the GraalVM setup to manage Gradle setup and cache handling properly.
@@ -70,6 +70,6 @@ I have this given error. Fix it."
 
 ## Post-Execution Task Checklist
 
-- [x] Update [.github/workflows/ci.yml](file:///c:/Git/circularo-cli/.github/workflows/ci.yml) step `Setup GraalVM 25` to remove `cache: 'gradle'`
-- [x] Add `Setup Gradle` step using `gradle/actions/setup-gradle@v4` in [.github/workflows/ci.yml](file:///c:/Git/circularo-cli/.github/workflows/ci.yml)
+- [x] Update [.github/workflows/ci.yml](../../.github/workflows/ci.yml) step `Setup GraalVM 25` to remove `cache: 'gradle'`
+- [x] Add `Setup Gradle` step using `gradle/actions/setup-gradle@v4` in [.github/workflows/ci.yml](../../.github/workflows/ci.yml)
 - [x] Run `./gradlew test` to verify local execution

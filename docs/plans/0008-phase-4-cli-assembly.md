@@ -16,11 +16,11 @@ Assemble the core CLI commands (`users` and `documents`), ensuring deterministic
 
 We need to suppress ugly Java stack traces for typical API and connection failures and print concise, actionable errors to `System.err`.
 
-#### [NEW] [CircularoExecutionExceptionHandler.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/CircularoExecutionExceptionHandler.java)
+#### [NEW] [CircularoExecutionExceptionHandler.java](../../src/main/java/com/circularo/cli/cli/CircularoExecutionExceptionHandler.java)
 - Implement `CommandLine.IExecutionExceptionHandler`.
 - Intercept `CircularoException` hierarchy and print messages clearly. Ensure non-zero exit codes.
 
-#### [MODIFY] [CircularoCliApplication.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/CircularoCliApplication.java)
+#### [MODIFY] [CircularoCliApplication.java](../../src/main/java/com/circularo/cli/CircularoCliApplication.java)
 - Wire `CircularoExecutionExceptionHandler` into the `CommandLine` instance.
 
 ---
@@ -29,14 +29,14 @@ We need to suppress ugly Java stack traces for typical API and connection failur
 
 Search endpoints return results inside wrappers (e.g. `{"results": [{"document": {...}}]}`). We will build Jackson-annotated wrapper records to handle deserialization seamlessly.
 
-#### [NEW] [UserSearchResponse.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/UserSearchResponse.java)
+#### [NEW] [UserSearchResponse.java](../../src/main/java/com/circularo/cli/model/UserSearchResponse.java)
 - `@JsonProperty("results") List<User> results`
 - `@JsonProperty("total") int total`
 
-#### [NEW] [DocumentSearchResultWrapper.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/DocumentSearchResultWrapper.java)
+#### [NEW] [DocumentSearchResultWrapper.java](../../src/main/java/com/circularo/cli/model/DocumentSearchResultWrapper.java)
 - `@JsonProperty("document") Document document`
 
-#### [NEW] [DocumentSearchResponse.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/DocumentSearchResponse.java)
+#### [NEW] [DocumentSearchResponse.java](../../src/main/java/com/circularo/cli/model/DocumentSearchResponse.java)
 - `@JsonProperty("results") List<DocumentSearchResultWrapper> results`
 - `@JsonProperty("total") int total`
 
@@ -44,7 +44,7 @@ Search endpoints return results inside wrappers (e.g. `{"results": [{"document":
 
 ### 3. Command Implementations
 
-#### [MODIFY] [UsersCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/UsersCmd.java)
+#### [MODIFY] [UsersCmd.java](../../src/main/java/com/circularo/cli/cli/UsersCmd.java)
 - Define `--query` and `--format` Picocli options.
 - Inject `CircularoApiClient`, `TableFormatter`, and `JsonFormatter`.
 - Build the `requestUsersPostSearch` payload natively:
@@ -53,7 +53,7 @@ Search endpoints return results inside wrappers (e.g. `{"results": [{"document":
 - Deserialize into `UserSearchResponse`.
 - Print via requested `OutputFormatter`.
 
-#### [MODIFY] [DocumentsCmd.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/cli/DocumentsCmd.java)
+#### [MODIFY] [DocumentsCmd.java](../../src/main/java/com/circularo/cli/cli/DocumentsCmd.java)
 - Define `--query` and `--format` Picocli options.
 - Inject `CircularoApiClient`, `TableFormatter`, and `JsonFormatter`.
 - Build the `requestSearchPostSearch` payload natively:

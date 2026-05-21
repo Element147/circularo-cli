@@ -21,7 +21,7 @@ Fix the GraalVM Native image build/test failure under Gradle when Configuration 
 
 ### Build Configuration
 
-#### [MODIFY] [build.gradle](file:///c:/Git/circularo-cli/build.gradle)
+#### [MODIFY] [build.gradle](../../build.gradle)
 - Add `toolchainDetection = false` to the `graalvmNative` block. This prevents the plugin from executing eager toolchain searches on the host JVM during task graph construction and configuration caching.
 
 ```groovy

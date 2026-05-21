@@ -6,10 +6,10 @@
 ## Proposed Technical Design/Steps
 
 1. **Verify Current Dependency Vulnerabilities & State**:
-   - Check the dependencies currently declared in [build.gradle](file:///c:/Git/circularo-cli/build.gradle).
+   - Check the dependencies currently declared in [build.gradle](../../build.gradle).
    - Review each library's latest version on Maven Central and any associated vulnerabilities.
 
-2. **Update Gradle Dependencies in [build.gradle](file:///c:/Git/circularo-cli/build.gradle)**:
+2. **Update Gradle Dependencies in [build.gradle](../../build.gradle)**:
    - Upgrade `org.graalvm.buildtools.native` from `0.11.5` to `1.1.0`.
    - Upgrade `info.picocli:picocli-spring-boot-starter` from `4.7.6` to `4.7.7`.
    - Upgrade `info.picocli:picocli` from `4.7.6` to `4.7.7`.
@@ -27,7 +27,7 @@
 
 ## Post-Execution Task Checklist
 
-- [x] Update dependency and plugin versions in [build.gradle](file:///c:/Git/circularo-cli/build.gradle)
+- [x] Update dependency and plugin versions in [build.gradle](../../build.gradle)
 - [x] Run `./gradlew clean test` to verify JVM build and test suite
 - [x] Run JVM live execution check for Successful API call (`users search`) and Elasticsearch query (`documents -q "definitionType:ext"`)
 - [x] Run `./gradlew nativeTest` to verify native image tests

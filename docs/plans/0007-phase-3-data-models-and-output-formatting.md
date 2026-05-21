@@ -22,10 +22,10 @@ We will introduce a lightweight JSON parsing framework, define domain Records, e
 
 ### 1. Build Configuration & Decisions
 
-#### [MODIFY] [build.gradle](file:///c:/Git/circularo-cli/build.gradle)
+#### [MODIFY] [build.gradle](../../build.gradle)
 - Add `implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'` or similar to enable Jackson deserialization.
 
-#### [MODIFY] [decisions.md](file:///c:/Git/circularo-cli/docs/decisions.md)
+#### [MODIFY] [decisions.md](../decisions.md)
 - Document the inclusion of Jackson Databind and our extensible AOT-friendly output formatting layer.
 
 ---
@@ -34,13 +34,13 @@ We will introduce a lightweight JSON parsing framework, define domain Records, e
 
 We will create stable records representing the schemas in `docs/api-1.yaml` under `com.circularo.cli.model`.
 
-#### [NEW] [Workflow.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/Workflow.java)
+#### [NEW] [Workflow.java](../../src/main/java/com/circularo/cli/model/Workflow.java)
 - A record containing `shareStateName`.
 
-#### [NEW] [Document.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/Document.java)
+#### [NEW] [Document.java](../../src/main/java/com/circularo/cli/model/Document.java)
 - A record containing `documentId`, `documentTitle`, `type`, `date`, and `Workflow`.
 
-#### [NEW] [User.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/model/User.java)
+#### [NEW] [User.java](../../src/main/java/com/circularo/cli/model/User.java)
 - A record containing `id`, `fullname`, `mail`, `name`, `phone`, `recordType`, `role`, and `status`.
 
 ---
@@ -49,7 +49,7 @@ We will create stable records representing the schemas in `docs/api-1.yaml` unde
 
 We will define the formatter interface and implement two distinct styles under `com.circularo.cli.format`.
 
-#### [NEW] [OutputFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/OutputFormatter.java)
+#### [NEW] [OutputFormatter.java](../../src/main/java/com/circularo/cli/format/OutputFormatter.java)
 - Extensible, AOT-friendly interface without heavy generic reflection:
   ```java
   public interface OutputFormatter {
@@ -58,11 +58,11 @@ We will define the formatter interface and implement two distinct styles under `
   }
   ```
 
-#### [NEW] [JsonFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/JsonFormatter.java)
+#### [NEW] [JsonFormatter.java](../../src/main/java/com/circularo/cli/format/JsonFormatter.java)
 - Implements `OutputFormatter`.
 - Uses a configured `ObjectMapper` to print indented, structured JSON.
 
-#### [NEW] [TableFormatter.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/format/TableFormatter.java)
+#### [NEW] [TableFormatter.java](../../src/main/java/com/circularo/cli/format/TableFormatter.java)
 - Implements `OutputFormatter`.
 - Dynamically calculates columns width based on the content and renders a clean, professional ASCII table.
 
@@ -77,8 +77,8 @@ We will write unit tests covering:
 - Deterministic, structured JSON formatting with `JsonFormatter`.
 - Dynamic, aligned human-readable ASCII formatting with `TableFormatter`.
 
-#### [NEW] [JsonFormatterTest.java](file:///c:/Git/circularo-cli/src/test/java/com/circularo/cli/format/JsonFormatterTest.java)
-#### [NEW] [TableFormatterTest.java](file:///c:/Git/circularo-cli/src/test/java/com/circularo/cli/format/TableFormatterTest.java)
+#### [NEW] [JsonFormatterTest.java](../../src/test/java/com/circularo/cli/format/JsonFormatterTest.java)
+#### [NEW] [TableFormatterTest.java](../../src/test/java/com/circularo/cli/format/TableFormatterTest.java)
 
 Verification command:
 ```powershell

@@ -29,16 +29,16 @@ We will modify and create classes strictly within the `com.circularo.cli.api` an
 
 We will create specific sub-exceptions of `CircularoException` under the `com.circularo.cli.api` package to represent domain-specific error conditions:
 
-#### [NEW] [CircularoCredentialsException.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/api/CircularoCredentialsException.java)
+#### [NEW] [CircularoCredentialsException.java](../../src/main/java/com/circularo/cli/api/CircularoCredentialsException.java)
 - For invalid, empty, or missing credentials/tokens (mapped to HTTP 401).
 
-#### [NEW] [CircularoAuthorizationException.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/api/CircularoAuthorizationException.java)
+#### [NEW] [CircularoAuthorizationException.java](../../src/main/java/com/circularo/cli/api/CircularoAuthorizationException.java)
 - For forbidden operations due to lack of rights or permissions (mapped to HTTP 403).
 
-#### [NEW] [CircularoMalformedInputException.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/api/CircularoMalformedInputException.java)
+#### [NEW] [CircularoMalformedInputException.java](../../src/main/java/com/circularo/cli/api/CircularoMalformedInputException.java)
 - For bad/invalid requests or parsing failures (mapped to HTTP 400).
 
-#### [NEW] [CircularoUpstreamException.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/api/CircularoUpstreamException.java)
+#### [NEW] [CircularoUpstreamException.java](../../src/main/java/com/circularo/cli/api/CircularoUpstreamException.java)
 - For general server errors, downstream service outages, or bad gateway errors (mapped to HTTP 5xx).
 
 ---
@@ -47,7 +47,7 @@ We will create specific sub-exceptions of `CircularoException` under the `com.ci
 
 We will extend `ConfigLoader` to support resolving the API base URL in addition to the token.
 
-#### [MODIFY] [ConfigLoader.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/config/ConfigLoader.java)
+#### [MODIFY] [ConfigLoader.java](../../src/main/java/com/circularo/cli/config/ConfigLoader.java)
 - Introduce `getApiUrl()` to resolve the base URL:
   1. Env var `CIRCULARO_API_URL`
   2. Local properties file `~/.circularo/config.properties`, key `api.url`
@@ -59,7 +59,7 @@ We will extend `ConfigLoader` to support resolving the API base URL in addition 
 
 We will implement a clean, dependency-free API client utilizing `java.net.http.HttpClient`.
 
-#### [NEW] [CircularoApiClient.java](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli/api/CircularoApiClient.java)
+#### [NEW] [CircularoApiClient.java](../../src/main/java/com/circularo/cli/api/CircularoApiClient.java)
 - Spring-managed `@Component` with constructor injection of `ConfigLoader` and a customizable `HttpClient`.
 - A generic method:
   `public HttpResponse<String> sendRequest(HttpRequest request)`
