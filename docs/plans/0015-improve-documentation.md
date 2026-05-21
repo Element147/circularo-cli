@@ -26,7 +26,7 @@ Improve the documentation in that way."
      - Full build options: `./gradlew bootJar` vs. `./gradlew nativeCompile`.
      - Full test options: `./gradlew test` vs. `./gradlew nativeTest`.
      - Run options: `./gradlew bootRun --args="..."`, `java -jar build/libs/circularocli-0.0.1-SNAPSHOT.jar ...`.
-   - Clearly state and link to the [User Manual](docs/user_manual.md) in the `docs` folder for advanced features, query patterns, and all 26+ subcommands.
+   - Clearly state and link to the [User Manual](../user_manual.md) in the `docs` folder for advanced features, query patterns, and all 26+ subcommands.
 
 2. **Modify `docs/user_manual.md`**:
    - Replace all occurrences of `.\build\native\nativeCompile\circularocli.exe` with `circularocli.exe`.

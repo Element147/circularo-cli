@@ -34,7 +34,7 @@ Create new Jackson-annotated data models for the reports endpoint responses.
 
 ### 2. API Layer
 
-#### [MODIFY] [CircularoApiClient.java](../../src/main/java/com/circularo/cli/api/CircularoApiClient.java)
+#### [MODIFY] [BaseCircularoApiClient.java](../../src/main/java/com/circularo/cli/api/BaseCircularoApiClient.java)
 - Register the new model classes for GraalVM AOT native reflection.
 - Add `searchReports(String query)` to query `/search/reports` endpoint via HTTP POST.
 

@@ -59,7 +59,7 @@ We will extend `ConfigLoader` to support resolving the API base URL in addition 
 
 We will implement a clean, dependency-free API client utilizing `java.net.http.HttpClient`.
 
-#### [NEW] [CircularoApiClient.java](../../src/main/java/com/circularo/cli/api/CircularoApiClient.java)
+#### [NEW] [BaseCircularoApiClient.java](../../src/main/java/com/circularo/cli/api/BaseCircularoApiClient.java)
 - Spring-managed `@Component` with constructor injection of `ConfigLoader` and a customizable `HttpClient`.
 - A generic method:
   `public HttpResponse<String> sendRequest(HttpRequest request)`
