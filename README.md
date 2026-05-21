@@ -1,99 +1,138 @@
 # Circularo CLI Search Utility
 
-A high-performance command-line utility for interacting with the Circularo REST API, built with Spring Boot, Picocli, and GraalVM Native Image.
+A high-performance, deterministic command-line utility for searching and managing resources (Users, Documents, Workflow Reports, Transactions) via the Circularo REST API. Built with Spring Boot, Picocli, and GraalVM Native Image.
 
-> [!TIP]
-> **New to CLI tools or looking for a step-by-step flow guide?**  
-> Read the beginner-friendly [User Manual](docs/user_manual.md) which contains step-by-step setup guides, full parameter listings, query syntax cheat sheets, and troubleshooting steps.
+> [!IMPORTANT]
+> **Complete User Manual Available:**
+> While this README provides a quickstart and developer-focused setup guide, the full command reference, syntax guides, and troubleshooting steps can be found in the [User Manual](docs/user_manual.md).
 
-## Quickstart (For Non-Programmers)
-To quickly run the application, open your terminal (e.g., PowerShell or Bash) and ensure you are in the **root directory of this project** (where this README file is located).
+---
 
-### Standard Run
-Use this method for a fast build process.
+## 🚀 Quick Start (Build & Test in 2 Minutes)
 
-1. **Build the application:**
-```bash
-./gradlew bootJar
-```
+Follow these simple steps to build the utility and run your first commands from the repository root:
 
-2. **Run the application (example for searching users):**
-```bash
-java -jar build/libs/circularo-cli-0.0.1-SNAPSHOT.jar users --query "search_term"
-```
-*(Note: Make sure to create a `.env` file with your credentials in this directory before running, see the Configuration section below).*
-
-### Alternative: Native Build
-You can also compile the application into a standalone Native executable. This process takes much longer to build, but the resulting executable starts instantly and does not require Java to be installed on the machine running it.
-
-1. **Build the native application (this may take several minutes):**
-```bash
-./gradlew nativeCompile
-```
-
-2. **Run the native application:**
-```bash
-# On Windows
-.\build\native\nativeCompile\circularocli.exe users --query "search_term"
-
-# On Linux/macOS
-./build/native/nativeCompile/circularo-cli users --query "search_term"
-```
-
-## Purpose
-This tool provides a deterministic, automation-friendly interface to search and retrieve resources (like Users and Documents) from a Circularo tenant. It is designed to be lightweight, fast, and easy to integrate into CI/CD pipelines or local developer workflows.
-
-## Command Model
-The CLI uses a resource-centric command model. All commands support a `--format` option for structured or tabular output.
-- **`users`**: Search for users (e.g., `circularo-cli users --query "mary griffin"`).
-- **`documents`**: Search for documents (e.g., `circularo-cli documents --query "title: Invoice*"`).
-
-Outputs can be formatted as JSON (`--format=json`) for machine readability or as tables (`--format=table`) for human readability.
-
-## Configuration
-The CLI requires an API URL and an authentication token. These can be provided via a `.env` file in the working directory:
+### 1. Configure Credentials
+Create a `.env` file in the root of the project (copying `.env.example`) and fill in your Circularo credentials:
 ```env
-CIRCULARO_API_URL=https://api.example.circularo.com
-CIRCULARO_API_TOKEN=your_secure_token_here
+CIRCULARO_API_URL=https://app.sandbox.circularo.com/api/v1/
+CIRCULARO_API_TOKEN=your_secure_api_token_here
 ```
 
-## Repository Organization
-- **`docs`**: Contains user documentation, architecture decision records (ADRs), developer guidelines, and API contract specifications:
-  - `api-1.yaml`: API workflow documentation for integrators.
-  - `api-1-full.yaml`: Full, complete Circularo API specification.
-- **`cli`**: Contains Picocli command definitions and CLI entry points.
-- **`api`**: Contains the native `HttpClient` wrapper and typed exception hierarchy for resilient HTTP communication.
-- **`format`**: Contains output formatters (`JsonFormatter`, `TableFormatter`) for deterministic console output.
-- **`config`**: Manages environment variables and application configuration loading.
-- **`model`**: Contains Java Records representing API request and response schemas.
-
-## How to Build and Run
-
-### Option A: Standard JAR (Fast Local Development)
-For rapid iteration, compile and run the standard Fat JAR.
-
+### 2. Build the Standalone Native Executable
+Compile the application into a standalone native binary (`circularocli.exe` on Windows, or `circularocli` on Linux).
 ```bash
-# Build the JAR
+./gradlew nativeCompile
+```
+*(Note: The initial native compilation will take a couple of minutes to build and optimize).*
+
+### 3. Run Commands (Using Local Build Paths)
+Once compiled, you can run the executable directly using its local path:
+
+#### On Windows (PowerShell):
+* **Check version:**
+  ```powershell
+  .\build\native\nativeCompile\circularocli.exe --version
+  ```
+* **Search users:**
+  ```powershell
+  .\build\native\nativeCompile\circularocli.exe users search -q "Lubo"
+  ```
+* **List documents:**
+  ```powershell
+  .\build\native\nativeCompile\circularocli.exe documents
+  ```
+
+#### On Linux / macOS (Terminal):
+* **Check version:**
+  ```bash
+  ./build/native/nativeCompile/circularocli --version
+  ```
+* **Search users:**
+  ```bash
+  ./build/native/nativeCompile/circularocli users search -q "Lubo"
+  ```
+* **List documents:**
+  ```bash
+  ./build/native/nativeCompile/circularocli documents
+  ```
+
+---
+
+## 💻 Developer Onboarding & Guide
+
+If you are a developer setting up your local workspace, here is the complete set of commands to build, test, and run the application.
+
+### 🛠️ Prerequisites
+- **No manual Java or GraalVM installation is required.** The project uses **Gradle Toolchains** to automatically download and provision the correct GraalVM JDK version (Java 25) during the first build execution.
+
+### 🏗️ Build Targets
+
+#### A. Standard JVM JAR (Fast Compilation)
+Ideal for standard code updates and rapid local testing.
+```bash
+# Build the JVM JAR
 ./gradlew bootJar
 
-# Run the CLI
-java -jar build/libs/circularo-cli-0.0.1-SNAPSHOT.jar
+# Run using the built JAR
+java -jar build/libs/circularocli-0.0.1-SNAPSHOT.jar users search
 ```
 
-### Option B: GraalVM Native Image (High Performance)
-For production consumption, compile an AOT native executable. Requires GraalVM toolchain installed.
-
+#### B. GraalVM Native Image (High Performance)
+Compiles a standalone native executable for instant startup and low memory footprint.
 ```bash
-# Compile Native Image
+# Build native binary
 ./gradlew nativeCompile
-
-# Run the native binary
-./build/native/nativeCompile/circularo-cli
 ```
 
-### Testing
-Run tests before committing:
+**Running the Native Binary:**
+- **Windows:**
+  ```powershell
+  .\build\native\nativeCompile\circularocli.exe users search
+  ```
+- **Linux / macOS:**
+  ```bash
+  ./build/native/nativeCompile/circularocli users search
+  ```
+
+### 🏃 Running in JVM Development Mode
+To execute commands directly from source without packing a JAR or compiling a native image:
 ```bash
+./gradlew bootRun --args="users search"
+./gradlew bootRun --args="documents -q 'definitionType:ext'"
+```
+
+### 🧪 Running Tests
+Always verify code correctness and native compilation compatibility before committing:
+```bash
+# Run standard JVM unit/integration tests
 ./gradlew test
+
+# Run tests compiled as a native image (verifies AOT/Closed-World assumptions)
 ./gradlew nativeTest
 ```
+
+---
+
+## 📦 CI/CD Pre-compiled Binaries (GitHub Actions)
+
+Since GraalVM Native Image compilation requires an environment matching the target OS, the project is configured with a GitHub Actions CI pipeline that compiles and verifies the utility on both Windows and Linux:
+- **Windows Native Binary:** compiled on a Windows runner (`circularo-cli-native-windows-latest` containing `circularocli.exe`).
+- **Linux Native Binary:** compiled on an Ubuntu runner (`circularo-cli-native-ubuntu-latest` containing `circularocli`).
+
+You can download these binaries directly from the **Artifacts** section of any successful run on the GitHub Actions tab of this repository.
+
+---
+
+## 📂 Repository Structure
+
+- [docs](file:///c:/Git/circularo-cli/docs): Documentation, API contracts, and decisions:
+  - [user_manual.md](file:///c:/Git/circularo-cli/docs/user_manual.md): Complete CLI usage guide and detailed command lists.
+  - [api-1-full.yaml](file:///c:/Git/circularo-cli/docs/api-1-full.yaml): Full OpenAPI / Swagger specification of the Circularo API.
+- [src/main/java/com/circularo/cli](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli): Source files structured by concern:
+  - `cli/`: Picocli command annotations, options, and subcommand groups.
+  - `api/`: Resilient `HttpClient` wrapper and entity endpoints.
+  - `format/`: Output formatters (Table, JSON, GFM Markdown).
+  - `config/`: Authentication/environment configuration loader.
+  - `model/`: DTO schemas representing API responses.
+

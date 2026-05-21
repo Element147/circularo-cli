@@ -35,19 +35,23 @@ First, open your command terminal:
 
 Navigate to the folder containing the tool and use the commands below.
 
+> [!NOTE]
+> **Windows PowerShell Execution Rule:**  
+> PowerShell does not load executables from the current directory by default for security reasons. Therefore, if you are running the tool locally from its directory and it is not in your system PATH, you must prefix commands with `.\` (e.g. `.\circularocli.exe`). The examples below use the `.\` prefix. If you have added the folder containing `circularocli.exe` to your system environment variables PATH, you can run the command as `circularocli.exe` directly from any folder.
+
 ### Command Help
 To view the help tree or command arguments, append `--help` or `-h`:
 ```powershell
-.\build\native\nativeCompile\circularocli.exe --help
+.\circularocli.exe --help
 ```
 
 ### Version Check
 ```powershell
-.\build\native\nativeCompile\circularocli.exe --version
+.\circularocli.exe --version
 ```
 **Expected Output:**
 ```text
-circularo-cli 1.0.0
+.\circularocli.exe 1.0.0
 ```
 
 ---
@@ -58,7 +62,7 @@ The `users` command group provides comprehensive tools to search, retrieve, crea
 
 Running the base command displays all available subcommands:
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users
+.\circularocli.exe users
 ```
 
 ### 4.1 Search & Retrieval
@@ -67,31 +71,31 @@ Running the base command displays all available subcommands:
 Queries the Circularo users database using Elasticsearch query_string syntax. If no query is provided, lists all users.
 ```powershell
 # List all users (Table format)
-.\build\native\nativeCompile\circularocli.exe users search
+.\circularocli.exe users search
 
 # Search for a specific user name or email
-.\build\native\nativeCompile\circularocli.exe users search -q "Lubo"
+.\circularocli.exe users search -q "Lubo"
 
 # Export search results to JSON
-.\build\native\nativeCompile\circularocli.exe users search -q "mail:*@seznam.cz" -f json
+.\circularocli.exe users search -q "mail:*@seznam.cz" -f json
 ```
 
 #### Get User by ID (`get`)
 Gets complete details for the user with the specified ID.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users get <id>
+.\circularocli.exe users get <id>
 ```
 
 #### Get Simple User Info by Username (`get-by-username`)
 Retrieves simple user info using the username.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users get-by-username <username> --photo-size <large|medium|small>
+.\circularocli.exe users get-by-username <username> --photo-size <large|medium|small>
 ```
 
 #### Get User Rights (`rights`)
 Displays the actions and access rights assigned to a user.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users rights <id> --detailed
+.\circularocli.exe users rights <id> --detailed
 ```
 
 ### 4.2 Account CRUD Operations
@@ -99,31 +103,31 @@ Displays the actions and access rights assigned to a user.
 #### Create Users Bulk (`create`)
 Creates one or more new user accounts using a local JSON payload file.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users create --file ./new_users.json
+.\circularocli.exe users create --file ./new_users.json
 ```
 
 #### Update Users Bulk (`update`)
 Updates properties of multiple users in bulk using a JSON payload file.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users update --file ./update_users.json
+.\circularocli.exe users update --file ./update_users.json
 ```
 
 #### Update Single User (`update-single`)
 Modifies a single user's properties by ID, with optional active token disabling and optimistic locking versioning.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users update-single <id> --file ./user_properties.json --disable-active-tokens --version 1
+.\circularocli.exe users update-single <id> --file ./user_properties.json --disable-active-tokens --version 1
 ```
 
 #### Delete User (`delete`)
 Deletes the specified user account, with an optional username to reassign their resources to.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users delete <id> --reassign <username>
+.\circularocli.exe users delete <id> --reassign <username>
 ```
 
 #### Register User (`register`)
 Self-registers a new user account with default settings.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users register --username joesmith --email joe@example.com --fullname "Joe Smith" --phone "+1234567890" --company "Acme Corp" --language "en"
+.\circularocli.exe users register --username joesmith --email joe@example.com --fullname "Joe Smith" --phone "+1234567890" --company "Acme Corp" --language "en"
 ```
 
 ### 4.3 Authentication & Security
@@ -131,49 +135,49 @@ Self-registers a new user account with default settings.
 #### Activate User (`activate`)
 Activates a new user account. Requires setting a password. You can optionally upload a local profile photo.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users activate --password "MySecret123" --fullname "Lubos" --file ./avatar.png
+.\circularocli.exe users activate --password "MySecret123" --fullname "Lubos" --file ./avatar.png
 ```
 
 #### Resend Activation Email (`resend-activation`)
 Resends the activation link/email to a newly created user.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users resend-activation <id> --tenant <tenant-name>
+.\circularocli.exe users resend-activation <id> --tenant <tenant-name>
 ```
 
 #### Check Activation Token (`check-activation`)
 Verifies the validity of the current user account activation token.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users check-activation
+.\circularocli.exe users check-activation
 ```
 
 #### Change Password (`change-password`)
 Changes the password for a specific user ID.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users change-password <id> --password "NewSecr3t" --old-password "OldSecr3t"
+.\circularocli.exe users change-password <id> --password "NewSecr3t" --old-password "OldSecr3t"
 ```
 
 #### Check Password Strength (`check-password`)
 Checks the strength of a proposed password.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users check-password --password "weakpass" --tenant <tenant-name>
+.\circularocli.exe users check-password --password "weakpass" --tenant <tenant-name>
 ```
 
 #### Reset Password Request (`reset-password`)
 Submits a password reset request with a username, token code, and the new password.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users reset-password --username joesmith --code 987654 --password "NewPassword123"
+.\circularocli.exe users reset-password --username joesmith --code 987654 --password "NewPassword123"
 ```
 
 #### Request Password Reset Link (`reset-password-username`)
 Initiates the password reset flow for a given username.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users reset-password-username --username joesmith --tenant <tenant-name>
+.\circularocli.exe users reset-password-username --username joesmith --tenant <tenant-name>
 ```
 
 #### Check Reset Token Validity (`check-reset-token`)
 Validates a password reset token.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users check-reset-token --token <reset-token>
+.\circularocli.exe users check-reset-token --token <reset-token>
 ```
 
 ### 4.4 Group Management
@@ -181,13 +185,13 @@ Validates a password reset token.
 #### Add User to Group (`add-group`)
 Adds a user to a security/permission group.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users add-group <id> <groupname>
+.\circularocli.exe users add-group <id> <groupname>
 ```
 
 #### Remove User from Group (`remove-group`)
 Removes a user from a security/permission group.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users remove-group <id> <groupname>
+.\circularocli.exe users remove-group <id> <groupname>
 ```
 
 ### 4.5 Profile Assets & Certificates
@@ -195,37 +199,37 @@ Removes a user from a security/permission group.
 #### Upload Profile Photo (`upload-photo`)
 Uploads a local image file as the user's profile photo.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users upload-photo <id> --file ./photo.jpg
+.\circularocli.exe users upload-photo <id> --file ./photo.jpg
 ```
 
 #### Delete Profile Photo (`delete-photo`)
 Deletes the profile photo of a user.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users delete-photo <id>
+.\circularocli.exe users delete-photo <id>
 ```
 
 #### Delete Signature Image (`delete-signature`)
 Deletes the user's saved hand-drawn signature image.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users delete-signature <id>
+.\circularocli.exe users delete-signature <id>
 ```
 
 #### Delete Initials Image (`delete-initials`)
 Deletes the user's saved initials image.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users delete-initials <id>
+.\circularocli.exe users delete-initials <id>
 ```
 
 #### Add User Certificate (`add-certificate`)
 Adds a certificate to a user profile, passing a local certificate file.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users add-certificate <id> --cert-name "SigningCert" --file ./cert.p12
+.\circularocli.exe users add-certificate <id> --cert-name "SigningCert" --file ./cert.p12
 ```
 
 #### Remove User Certificate (`remove-certificate`)
 Removes a certificate from a user profile by certificate ID.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users remove-certificate <id> <certificateId>
+.\circularocli.exe users remove-certificate <id> <certificateId>
 ```
 
 > [!NOTE]
@@ -240,7 +244,7 @@ The `documents` command queries documents saved in your Circularo repository.
 
 ### Basic command (Lists all documents):
 ```powershell
-.\build\native\nativeCompile\circularocli.exe documents
+.\circularocli.exe documents
 ```
 **Expected Output (Table Format):**
 ```text
@@ -253,7 +257,7 @@ The `documents` command queries documents saved in your Circularo repository.
 
 ### Export to JSON:
 ```powershell
-.\build\native\nativeCompile\circularocli.exe documents -f json
+.\circularocli.exe documents -f json
 ```
 **Expected Output (JSON Format):**
 ```json
@@ -278,11 +282,11 @@ Use the `-q` or `--query` option to filter your documents.
 
 | Goal | Example Command |
 | :--- | :--- |
-| **Exact Title Search** | `circularo-cli documents -q 'title:"Circularo User Guide.pdf"'` |
-| **Search by Document Type** *(e.g. ext, int)* | `circularo-cli documents -q "definitionType:ext"` |
-| **Wildcard Title Search** *(finds anything starting with Invoice)* | `circularo-cli documents -q "title:Invoice*"` |
-| **Search by Status** *(e.g. signed, draft, inprogress)* | `circularo-cli documents -q "status:signed"` |
-| **Combined Search** *(signed documents with "contract" in title)* | `circularo-cli documents -q "status:signed AND title:*contract*"` |
+| **Exact Title Search** | `.\circularocli.exe documents -q 'title:"Circularo User Guide.pdf"'` |
+| **Search by Document Type** *(e.g. ext, int)* | `.\circularocli.exe documents -q "definitionType:ext"` |
+| **Wildcard Title Search** *(finds anything starting with Invoice)* | `.\circularocli.exe documents -q "title:Invoice*"` |
+| **Search by Status** *(e.g. signed, draft, inprogress)* | `.\circularocli.exe documents -q "status:signed"` |
+| **Combined Search** *(signed documents with "contract" in title)* | `.\circularocli.exe documents -q "status:signed AND title:*contract*"` |
 
 ---
 
@@ -292,13 +296,13 @@ The `reports` command queries the Circularo document workflow database to genera
 
 ### Basic command (Lists all reports):
 ```powershell
-.\build\native\nativeCompile\circularocli.exe reports
+.\circularocli.exe reports
 ```
 
 ### Detailed/Verbose View:
 Use the `-v` or `--verbose` flag to output detailed lists of actions already processed (participants who processed the action, when, and action type) and those currently waiting on turn.
 ```powershell
-.\build\native\nativeCompile\circularocli.exe reports --verbose
+.\circularocli.exe reports --verbose
 ```
 
 ### Filtering Search Results:
@@ -306,9 +310,9 @@ Use the `-q` or `--query` option to filter workflow reports by creator, sender, 
 
 | Goal | Example Command |
 | :--- | :--- |
-| **Search by Document Title** | `circularo-cli reports -q "title:\"NDA Agreement.pdf\""` |
-| **Search by Owner/Creator** | `circularo-cli reports -q "owner:Lubos*"` |
-| **Search by Sender** | `circularo-cli reports -q "sender:Lubos*"` |
+| **Search by Document Title** | `.\circularocli.exe reports -q "title:\"NDA Agreement.pdf\""` |
+| **Search by Owner/Creator** | `.\circularocli.exe reports -q "owner:Lubos*"` |
+| **Search by Sender** | `.\circularocli.exe reports -q "sender:Lubos*"` |
 
 > [!WARNING]
 > **Sandbox Authorization Limitations:**
@@ -322,13 +326,13 @@ The `transactions` command is tailored to inspect and track specific document wo
 
 ### Basic command (Lists all transactions):
 ```powershell
-.\build\native\nativeCompile\circularocli.exe transactions
+.\circularocli.exe transactions
 ```
 
 ### Detailed/Verbose View:
 Use the `-v` or `--verbose` flag to inspect detailed participant workflow paths for transactions:
 ```powershell
-.\build\native\nativeCompile\circularocli.exe transactions --state completed --verbose
+.\circularocli.exe transactions --state completed --verbose
 ```
 
 ### Filtering by Transaction State:
@@ -336,9 +340,9 @@ Use the `-s` or `--state` option to filter results by specific transaction state
 
 | Goal | Example Command |
 | :--- | :--- |
-| **List Completed Transactions** | `circularo-cli transactions --state completed` |
-| **List In-Progress Transactions** | `circularo-cli transactions --state inprogress` |
-| **Search and Filter by State** *(draft invoices)* | `circularo-cli transactions -q "title:Invoice*" --state draft` |
+| **List Completed Transactions** | `.\circularocli.exe transactions --state completed` |
+| **List In-Progress Transactions** | `.\circularocli.exe transactions --state inprogress` |
+| **Search and Filter by State** *(draft invoices)* | `.\circularocli.exe transactions -q "title:Invoice*" --state draft` |
 
 ---
 
@@ -351,17 +355,17 @@ The tool supports three output formats:
 
 ### Example: Show users in human-readable table:
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users --format table
+.\circularocli.exe users --format table
 ```
 
 ### Example: Export users to a JSON text block:
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users --format json
+.\circularocli.exe users --format json
 ```
 
 ### Example: Output users in GFM Markdown format:
 ```powershell
-.\build\native\nativeCompile\circularocli.exe users --format md
+.\circularocli.exe users --format md
 ```
 
 ---
@@ -375,7 +379,7 @@ This section details how the CLI handles and formats errors, displaying user-fri
 * **Command:**
   ```powershell
   # (Temporarily renaming .env triggers this)
-  .\build\native\nativeCompile\circularocli.exe users
+  .\circularocli.exe users
   ```
 * **CLI Output (Stderr):**
   ```text
@@ -387,7 +391,7 @@ This section details how the CLI handles and formats errors, displaying user-fri
 * **Trigger:** Requesting a resource that requires rights not granted to your API token.
 * **Command:**
   ```powershell
-  .\build\native\nativeCompile\circularocli.exe reports
+  .\circularocli.exe reports
   ```
 * **CLI Output (Stderr):**
   ```text
@@ -399,7 +403,7 @@ This section details how the CLI handles and formats errors, displaying user-fri
 * **Trigger:** Sending a search string format that is rejected by the server index parser.
 * **Command:**
   ```powershell
-  .\build\native\nativeCompile\circularocli.exe users -q "Luboš"
+  .\circularocli.exe users -q "Luboš"
   ```
 * **CLI Output (Stderr):**
   ```text
@@ -412,7 +416,7 @@ This section details how the CLI handles and formats errors, displaying user-fri
 * **Command:**
   ```powershell
   # (Simulated with invalid URL)
-  .\build\native\nativeCompile\circularocli.exe users
+  .\circularocli.exe users
   ```
 * **CLI Output (Stderr):**
   ```text
