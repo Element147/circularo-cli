@@ -34,7 +34,7 @@ class ReportsApiClientTest {
         BaseCircularoApiClient baseClient = new BaseCircularoApiClient(configLoader, httpClient);
         ReportsApiClient reportsApiClient = new ReportsApiClient(baseClient);
 
-        List<WorkflowReport> reports = reportsApiClient.searchReports("NDA");
+        List<WorkflowReport> reports = reportsApiClient.searchReports("NDA", 50);
 
         assertNotNull(reports);
         assertEquals(1, reports.size());

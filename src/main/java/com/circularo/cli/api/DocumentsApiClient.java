@@ -32,9 +32,13 @@ public class DocumentsApiClient {
 
     /**
      * Searches for Circularo documents using the Elasticsearch syntax query.
+     *
+     * @param query optional Elasticsearch query_string filter
+     * @param limit maximum number of results to return
      */
-    public List<Document> searchDocuments(String query) {
+    public List<Document> searchDocuments(String query, int limit) {
         Map<String, Object> payload = new HashMap<>();
+        payload.put("size", limit);
         if (query != null && !query.isBlank()) {
             Map<String, Object> queryStringMap = new HashMap<>();
             queryStringMap.put("query", query);

@@ -25,7 +25,7 @@ class StubDocumentsApiClient extends DocumentsApiClient {
     }
 
     @Override
-    public List<Document> searchDocuments(String query) {
+    public List<Document> searchDocuments(String query, int limit) {
         if (exceptionToThrow != null) {
             throw exceptionToThrow;
         }

@@ -1,0 +1,819 @@
+{
+  "/users/{id}/certificate/{certificate}": {
+    "DELETE": {
+      "summary": "Remove certificate from the user.",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.",
+      "parameters": [
+        {
+          "name": "certificate",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/identity": {
+    "DELETE": {
+      "summary": "Remove identity from the user.",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "name",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/initials": {
+    "DELETE": {
+      "summary": "Delete initials image.",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/photo": {
+    "DELETE": {
+      "summary": "Delete profile image.",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/signature": {
+    "DELETE": {
+      "summary": "Delete signature image.",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}": {
+    "DELETE": {
+      "summary": "Delete a user account",
+      "description": "This endpoint removes a user account from the Circularo system.\n\nWhen a user is deleted:\n- Their access to the system is immediately revoked\n- Their documents can be reassigned to another user or remain unassigned\n\nNote: This endpoint requires administrative permissions. Only system administrators or organization administrators can delete user accounts.\n\n---\n\n\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "reassign",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "example": "john.doe@example.com",
+            "nullable": true
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "The user was successfully deleted.",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    },
+    "GET": {
+      "summary": "Retrieve a single user by ID",
+      "description": "This endpoint retrieves detailed information about a specific user in the Circularo system.\n\nThe endpoint provides comprehensive user information including:\n1. Basic profile details (email, fullname, phone)\n2. Account status and configuration\n3. Group memberships and organization association\n4. User preferences (language, timezone, date/time formats)\n5. Authentication factors and identity providers\n6. Custom fields and filters\n\nThis information is useful for:\n- Managing user accounts\n- Determining user capabilities based on their role and groups\n- Integrating with external systems that need user information\n\nNote: This endpoint requires administrative permissions. Only system administrators or organization administrators can access user details.\n\n---\n\n\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[view_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Returns the requested user with all their details.",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersNormal"
+          }
+        }
+      }
+    },
+    "PUT": {
+      "summary": "Update a user's profile and configuration",
+      "description": "This endpoint allows administrators to update a user's profile information and account configuration.\n\nThe endpoint provides several capabilities:\n1. Update basic user information (fullname, email, phone, etc.)\n2. Modify account status (active, suspended, etc.)\n3. Update user preferences (language, timezone, date/time formats)\n5. Manage group memberships\n6. Configure notification preferences\n7. Update custom fields and saved filters\n8. Change user password\n\nNote: This endpoint requires an administrative role. Organization administrators can only update users within their organization, while system administrators can update any user.\n\n---\n\n\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "disableActiveTokens",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "version",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": false,
+            "example": 5
+          }
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPutUser"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "The user was successfully updated.",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/activation": {
+    "GET": {
+      "summary": "Check activation token validity",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.",
+      "parameters": [],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersActivation"
+          }
+        }
+      }
+    }
+  },
+  "/users/reset/check": {
+    "GET": {
+      "summary": "Checks reset token validity",
+      "description": "\n\n**No authorization:** No authorization is required to call this endpoint.",
+      "parameters": [
+        {
+          "name": "resetToken",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersResetToken"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/getRights": {
+    "GET": {
+      "summary": "Get user rights",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[view_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "detailed",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersRights"
+          }
+        }
+      }
+    }
+  },
+  "/users/username/{user}": {
+    "GET": {
+      "summary": "Get simple user info by username",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[view_users]`",
+      "parameters": [
+        {
+          "name": "user",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "photoSize",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "nano",
+              "small",
+              "medium",
+              "big"
+            ],
+            "example": "nano",
+            "default": "nano"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersBasic"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/addToGroup": {
+    "POST": {
+      "summary": "Add user to group",
+      "description": "This endpoint adds a specified user to a group in the Circularo system. This can be used to add a user to an organization group.\n\nGroup membership in Circularo determines:\n- What permissions and rights a user has\n- Which organization the user belongs to\n- What content the user can access\n- What actions the user can perform\n\nNote: This endpoint requires administrative permissions. Only system administrators or organization administrators can modify group memberships.\n\n---\n\n\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "groupname",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "d0a72e5f-719e-4a2d-955c-23896122b6d0"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "The user was successfully added to the specified group.",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/certificate": {
+    "POST": {
+      "summary": "Add certificate to the user.",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPostCertificate"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/password/check": {
+    "POST": {
+      "summary": "Check password strength.",
+      "description": "\n\n**Optional authorization:** Authorize using token or specify the tenant to call this endpoint.",
+      "parameters": [
+        {
+          "name": "tenant",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+$",
+            "example": "default",
+            "nullable": true
+          }
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPostCheckPassword"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersPasswordStrength"
+          }
+        }
+      }
+    }
+  },
+  "/users/register": {
+    "POST": {
+      "summary": "Register a new user account. Optional captcha.",
+      "description": "\n\n**Token or reCAPTCHA authorization:** Authorize using token or reCAPTCHA (if enabled) to call this endpoint.\n\n**Required user rights (if token specified):** `[update_users]`",
+      "parameters": [],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPostRegisterUser"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/removeFromGroup": {
+    "POST": {
+      "summary": "Remove user from group",
+      "description": "This endpoint removes a specified user from a group in the Circularo system. This cannot be used to remove the user from their organization group.\n\nGroup membership in Circularo determines:\n- What permissions and rights a user has\n- Which organization the user belongs to\n- What content the user can access\n- What actions the user can perform\n\nNote: This endpoint requires administrative permissions. Only system administrators or organization administrators can modify group memberships.\n\n---\n\n\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "groupname",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "a5a723de-019e-8a2d-655c-b0896122b6c1"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "The user was successfully removed from the specified group.",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/resendActivation": {
+    "POST": {
+      "summary": "Resend activation email to user. Optional captcha.",
+      "description": "\n\n**Token or reCAPTCHA authorization:** Authorize using token or reCAPTCHA (if enabled) to call this endpoint.\n\n**Required user rights (if token specified):** `[update_users]`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        },
+        {
+          "name": "tenant",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+$",
+            "example": "default",
+            "nullable": true
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/search": {
+    "POST": {
+      "summary": "Search for users based on specified criteria",
+      "description": "This endpoint allows you to search for users in the Circularo system using various filtering criteria.\n\nThe endpoint provides several capabilities:\n1. Search for users using Elasticsearch query syntax for powerful filtering\n2. Filter users by rights (permissions they have)\n3. Include users from contact lists and groups in search results\n4. Retrieve user activity information and active sessions\n5. Choose between minimal and full response formats\n6. Support for aggregations to analyze user data\n\n---\n\n\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[view_users]`",
+      "parameters": [
+        {
+          "name": "photoSize",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "nano",
+              "small",
+              "medium",
+              "big"
+            ],
+            "example": "nano",
+            "default": "nano"
+          }
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPostSearch"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Returns users matching the search criteria along with pagination information.",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersSearch"
+          }
+        }
+      }
+    }
+  },
+  "/users": {
+    "POST": {
+      "summary": "Create new user accounts",
+      "description": "This endpoint allows administrators to create one or more user accounts in the Circularo system.\n\nThe endpoint provides several capabilities:\n1. Create one or multiple users in a single request (batch creation)\n2. Configure detailed user profiles including contact information and preferences\n3. Assign users to groups and organizations\n4. Set initial passwords and account status\n5. Configure notification preferences\n6. Optionally send welcome emails to new users\n\nUser accounts created through this endpoint can be configured with various settings including:\n- Basic profile information (fullname, email, phone, company)\n- Account status (active, newly_created, etc.)\n- Group memberships and organization assignment\n- Authentication factors and security settings\n- User interface preferences (language, timezone, date/time formats)\n- Custom fields for organization-specific data\n\nNote: This endpoint requires an administrative role. Organization administrators can only create users within their organization, while system administrators can create users in any organization.\n\n---\n\n\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[add_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPostUser"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Returns details about unsuccessful user creation operations, other users were created successfully.",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericBulk"
+          }
+        }
+      }
+    },
+    "PUT": {
+      "summary": "Update users",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPutUsersBulk"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericBulk"
+          }
+        }
+      }
+    }
+  },
+  "/users/activate": {
+    "PUT": {
+      "summary": "Activate user",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.",
+      "parameters": [],
+      "requestBody": {
+        "contentType": "multipart/form-data",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPutActivate"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseLogin"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/password": {
+    "PUT": {
+      "summary": "Change any user password",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPutPassword"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}/upload": {
+    "PUT": {
+      "summary": "Upload photo",
+      "description": "\n\n**Token authorization:** Authorize using token to call this endpoint.\n\n**Required user rights:** `[update_users]`\n\n**Required user role:** `admin or organization_admin`",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": {
+        "contentType": "multipart/form-data",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPutPhoto"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseUsersConfiguration"
+          }
+        }
+      }
+    }
+  },
+  "/users/reset": {
+    "PUT": {
+      "summary": "Reset password by username",
+      "description": "\n\n**No authorization:** No authorization is required to call this endpoint.",
+      "parameters": [],
+      "requestBody": {
+        "contentType": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/requestUsersPutResetPassword"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  },
+  "/users/reset/username": {
+    "PUT": {
+      "summary": "Reset password by username. Optional captcha.",
+      "description": "\n\n**Token or reCAPTCHA authorization:** Authorize using token or reCAPTCHA (if enabled) to call this endpoint.\n\n**Required user rights (if token specified):** `[update_users]`",
+      "parameters": [
+        {
+          "name": "tenant",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+$",
+            "example": "default",
+            "nullable": true
+          }
+        },
+        {
+          "name": "username",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.@_-]+$",
+            "minLength": 1,
+            "example": "john.doe@example.com"
+          }
+        }
+      ],
+      "requestBody": null,
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "#/components/schemas/responseGenericStatus"
+          }
+        }
+      }
+    }
+  }
+}

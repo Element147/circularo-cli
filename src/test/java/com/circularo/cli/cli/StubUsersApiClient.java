@@ -96,7 +96,7 @@ class StubUsersApiClient extends UsersApiClient {
     }
 
     @Override
-    public List<User> searchUsers(String query) {
+    public List<User> searchUsers(String query, int limit) {
         if (exceptionToThrow != null) {
             throw exceptionToThrow;
         }

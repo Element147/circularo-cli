@@ -32,9 +32,13 @@ public class ReportsApiClient {
 
     /**
      * Searches for Circularo document workflow reports using the Elasticsearch syntax query.
+     *
+     * @param query optional Elasticsearch query_string filter
+     * @param limit maximum number of results to return
      */
-    public List<WorkflowReport> searchReports(String query) {
+    public List<WorkflowReport> searchReports(String query, int limit) {
         Map<String, Object> payload = new HashMap<>();
+        payload.put("size", limit);
         Map<String, Object> queryMap = new HashMap<>();
         if (query != null && !query.isBlank()) {
             Map<String, Object> queryStringMap = new HashMap<>();

@@ -34,7 +34,7 @@ class DocumentsApiClientTest {
         BaseCircularoApiClient baseClient = new BaseCircularoApiClient(configLoader, httpClient);
         DocumentsApiClient documentsApiClient = new DocumentsApiClient(baseClient);
 
-        List<Document> documents = documentsApiClient.searchDocuments("Contract");
+        List<Document> documents = documentsApiClient.searchDocuments("Contract", 50);
 
         assertNotNull(documents);
         assertEquals(1, documents.size());

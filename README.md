@@ -129,10 +129,36 @@ You can download these binaries directly from the **Artifacts** section of any s
 - [docs](file:///c:/Git/circularo-cli/docs): Documentation, API contracts, and decisions:
   - [user_manual.md](file:///c:/Git/circularo-cli/docs/user_manual.md): Complete CLI usage guide and detailed command lists.
   - [api-1-full.yaml](file:///c:/Git/circularo-cli/docs/api-1-full.yaml): Full OpenAPI / Swagger specification of the Circularo API.
+  - [plans/](file:///c:/Git/circularo-cli/docs/plans): Full implementation plan audit trail (18+ plans).
+  - [decisions.md](file:///c:/Git/circularo-cli/docs/decisions.md): Architecture decision records.
+  - [open_questions.md](file:///c:/Git/circularo-cli/docs/open_questions.md): Known limitations and open design questions.
 - [src/main/java/com/circularo/cli](file:///c:/Git/circularo-cli/src/main/java/com/circularo/cli): Source files structured by concern:
   - `cli/`: Picocli command annotations, options, and subcommand groups.
   - `api/`: Resilient `HttpClient` wrapper and entity endpoints.
   - `format/`: Output formatters (Table, JSON, GFM Markdown).
   - `config/`: Authentication/environment configuration loader.
   - `model/`: DTO schemas representing API responses.
+
+---
+
+## 🤖 Agentic Development Workflow
+
+This project was built using a **fully agentic AI development workflow**, where every feature, architectural decision, and bug fix was driven through a structured plan → implement → verify → document loop.
+
+The complete audit trail is recorded in [`docs/plans/`](docs/plans/), covering 18+ implementation cycles — from initial scaffolding to security reviews to final polishing. Each plan contains:
+- The triggering user prompt (verbatim)
+- The proposed technical design and steps
+- A post-execution checklist with completion status
+
+This workflow is a core demonstration of the agentic coding capability evaluated in this project.
+
+---
+
+## ⚠️ Known Limitations
+
+See [`docs/open_questions.md`](docs/open_questions.md) for the full list. Key points:
+
+- **Pagination**: The `--limit` flag controls result set size (default: 50). Full pagination (page-by-page iteration) is not yet implemented.
+- **Token Lifecycle**: The CLI assumes a long-lived API token. No OAuth flow or automatic token refresh is included.
+- **Elasticsearch Behavior**: The `/users/search` endpoint on some sandbox tenants may reject non-empty query strings due to Elasticsearch parsing restrictions. Use an empty `--query` flag to list all users in those environments.
 

@@ -6,6 +6,8 @@ import com.circularo.cli.cli.TransactionsCmd;
 import com.circularo.cli.cli.UsersCmd;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Spec;
 
 import java.util.concurrent.Callable;
 
@@ -13,6 +15,7 @@ import java.util.concurrent.Callable;
 @Command(
         name = "circularo-cli",
         mixinStandardHelpOptions = true,
+        version = {"circularo-cli 1.0.0"},
         header = {
             "==================================================",
             "        CIRCULARO CLI SEARCH UTILITY v1.0.0",
@@ -24,12 +27,12 @@ import java.util.concurrent.Callable;
             "Requires API URL and API Token configured in a local '.env' file.",
             "",
             "Quick Examples:",
-            "  - Find all internal users:           circularo-cli users",
-            "  - Query users by email or name:      circularo-cli users --query \"mail:*example.com\"",
+            "  - Find all internal users:           circularo-cli users search",
+            "  - Query users by email or name:      circularo-cli users search --query \"mail:*example.com\"",
             "  - Search documents by query string:  circularo-cli documents --query \"title:Invoice*\"",
             "  - Search reports:                    circularo-cli reports --query \"title:Invoice*\"",
             "  - Filter completed transactions:      circularo-cli transactions --state completed",
-            "  - Output results in JSON format:     circularo-cli users --format json"
+            "  - Output results in JSON format:     circularo-cli users search --format json"
         },
         footer = {
             "",
@@ -40,10 +43,13 @@ import java.util.concurrent.Callable;
 )
 public class RootCmd implements Callable<Integer> {
 
+    @Spec
+    private CommandSpec spec;
+
     @Override
     public Integer call() {
-        // Invoked when no sub-command is provided; print usage hint.
-        System.out.println("Use --help to see available sub-commands.");
+        // Invoked when no sub-command is provided; print full usage to guide the user.
+        spec.commandLine().usage(spec.commandLine().getOut());
         return 0;
     }
 }

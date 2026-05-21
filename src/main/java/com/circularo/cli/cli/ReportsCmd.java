@@ -57,6 +57,9 @@ public class ReportsCmd implements Runnable {
     @Option(names = {"-q", "--query"}, description = "Elasticsearch query string")
     private String query;
 
+    @Option(names = {"--limit", "-l"}, description = "Maximum number of results to return (default: 50)", defaultValue = "50")
+    private int limit;
+
     @Option(names = {"-f", "--format"}, description = "Output format (table, json, md)", defaultValue = "table")
     private String format;
 
@@ -73,7 +76,7 @@ public class ReportsCmd implements Runnable {
 
     @Override
     public void run() {
-        List<WorkflowReport> reports = apiClient.searchReports(query);
+        List<WorkflowReport> reports = apiClient.searchReports(query, limit);
 
         String formattedOutput;
         if ("json".equalsIgnoreCase(format)) {

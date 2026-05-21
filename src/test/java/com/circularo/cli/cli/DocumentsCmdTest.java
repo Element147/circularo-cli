@@ -82,4 +82,33 @@ class DocumentsCmdTest {
         assertTrue(result.contains("| Document ID | Title |"));
         assertTrue(result.contains("| doc-1 | Invoice 123 |"));
     }
+
+    @Test
+    void run_withEmptyResults_printsNoDocumentsMessage() {
+        apiClient.setStubDocs(List.of());
+
+        StringWriter out = new StringWriter();
+        CommandLine cmd = new CommandLine(documentsCmd);
+        cmd.setOut(new PrintWriter(out));
+
+        int exitCode = cmd.execute("-q", "nonexistent");
+
+        assertEquals(0, exitCode);
+        assertTrue(out.toString().contains("No documents found."));
+    }
+
+    @Test
+    void run_withLimitOption_passesLimitAndPrintsTable() {
+        List<Document> mockDocs = List.of(new Document("doc-1", "Invoice 123", "invoice", "2026-05-18", null));
+        apiClient.setStubDocs(mockDocs);
+
+        StringWriter out = new StringWriter();
+        CommandLine cmd = new CommandLine(documentsCmd);
+        cmd.setOut(new PrintWriter(out));
+
+        int exitCode = cmd.execute("--limit", "10", "-f", "table");
+
+        assertEquals(0, exitCode);
+        assertTrue(out.toString().contains("Invoice 123"));
+    }
 }

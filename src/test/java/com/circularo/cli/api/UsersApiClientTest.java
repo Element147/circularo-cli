@@ -34,7 +34,7 @@ class UsersApiClientTest {
         BaseCircularoApiClient baseClient = new BaseCircularoApiClient(configLoader, httpClient);
         UsersApiClient usersApiClient = new UsersApiClient(baseClient);
 
-        List<User> users = usersApiClient.searchUsers("john");
+        List<User> users = usersApiClient.searchUsers("john", 50);
 
         assertNotNull(users);
         assertEquals(1, users.size());

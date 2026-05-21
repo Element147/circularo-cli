@@ -1,0 +1,202 @@
+[
+  {
+    "path": "/users/{id}/certificate/{certificate}",
+    "method": "DELETE",
+    "summary": "Remove certificate from the user."
+  },
+  {
+    "path": "/users/{id}/identity",
+    "method": "DELETE",
+    "summary": "Remove identity from the user."
+  },
+  {
+    "path": "/users/{id}/initials",
+    "method": "DELETE",
+    "summary": "Delete initials image."
+  },
+  {
+    "path": "/users/{id}/photo",
+    "method": "DELETE",
+    "summary": "Delete profile image."
+  },
+  {
+    "path": "/users/{id}/signature",
+    "method": "DELETE",
+    "summary": "Delete signature image."
+  },
+  {
+    "path": "/users/{id}",
+    "method": "DELETE",
+    "summary": "Delete a user account"
+  },
+  {
+    "path": "/users/{id}",
+    "method": "GET",
+    "summary": "Retrieve a single user by ID"
+  },
+  {
+    "path": "/users/{id}",
+    "method": "PUT",
+    "summary": "Update a user's profile and configuration"
+  },
+  {
+    "path": "/users/activation",
+    "method": "GET",
+    "summary": "Check activation token validity"
+  },
+  {
+    "path": "/users/reset/check",
+    "method": "GET",
+    "summary": "Checks reset token validity"
+  },
+  {
+    "path": "/users/{id}/getRights",
+    "method": "GET",
+    "summary": "Get user rights"
+  },
+  {
+    "path": "/users/username/{user}",
+    "method": "GET",
+    "summary": "Get simple user info by username"
+  },
+  {
+    "path": "/users/{id}/addToGroup",
+    "method": "POST",
+    "summary": "Add user to group"
+  },
+  {
+    "path": "/users/{id}/certificate",
+    "method": "POST",
+    "summary": "Add certificate to the user."
+  },
+  {
+    "path": "/users/password/check",
+    "method": "POST",
+    "summary": "Check password strength."
+  },
+  {
+    "path": "/users/register",
+    "method": "POST",
+    "summary": "Register a new user account. Optional captcha."
+  },
+  {
+    "path": "/users/{id}/removeFromGroup",
+    "method": "POST",
+    "summary": "Remove user from group"
+  },
+  {
+    "path": "/users/{id}/resendActivation",
+    "method": "POST",
+    "summary": "Resend activation email to user. Optional captcha."
+  },
+  {
+    "path": "/users/search",
+    "method": "POST",
+    "summary": "Search for users based on specified criteria"
+  },
+  {
+    "path": "/users",
+    "method": "POST",
+    "summary": "Create new user accounts"
+  },
+  {
+    "path": "/users",
+    "method": "PUT",
+    "summary": "Update users"
+  },
+  {
+    "path": "/users/activate",
+    "method": "PUT",
+    "summary": "Activate user"
+  },
+  {
+    "path": "/users/{id}/password",
+    "method": "PUT",
+    "summary": "Change any user password"
+  },
+  {
+    "path": "/users/{id}/upload",
+    "method": "PUT",
+    "summary": "Upload photo"
+  },
+  {
+    "path": "/users/reset",
+    "method": "PUT",
+    "summary": "Reset password by username"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "PUT",
+    "summary": "Reset password by username. Optional captcha."
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "GET",
+    "summary": "Verify document signature based on document id"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "GET",
+    "summary": "Verify document signature based on signature id"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "POST",
+    "summary": "Verify document signature based on a reference file"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "DELETE",
+    "summary": "Delete a webhook"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "GET",
+    "summary": "List available webhooks"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "POST",
+    "summary": "Create a new webhook"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "GET",
+    "summary": "Gets file content by file hash"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "POST",
+    "summary": "Handles file contents"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "GET",
+    "summary": "Get file info from /files/info/hash/{hash}"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "POST",
+    "summary": "Handles file info about lock & unlock state etc"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "GET",
+    "summary": "Returns the WOPI client name and its supported extensions."
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "POST",
+    "summary": "Create WOPI token"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "GET",
+    "summary": "Creates WebSocket connection. Use WS client!"
+  },
+  {
+    "path": "/users/reset/username",
+    "method": "PUT",
+    "summary": "Puts message to WebSocket"
+  }
+]

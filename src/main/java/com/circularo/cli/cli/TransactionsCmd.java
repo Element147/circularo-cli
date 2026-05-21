@@ -59,6 +59,9 @@ public class TransactionsCmd implements Runnable {
     @Option(names = {"-s", "--state"}, description = "Filter transactions by state (e.g. completed, inprogress, draft, cancelled)")
     private String state;
 
+    @Option(names = {"--limit", "-l"}, description = "Maximum number of results to return (default: 50)", defaultValue = "50")
+    private int limit;
+
     @Option(names = {"-f", "--format"}, description = "Output format (table, json, md)", defaultValue = "table")
     private String format;
 
@@ -75,7 +78,7 @@ public class TransactionsCmd implements Runnable {
 
     @Override
     public void run() {
-        List<WorkflowReport> reports = apiClient.searchReports(query);
+        List<WorkflowReport> reports = apiClient.searchReports(query, limit);
 
         if (state != null && !state.isBlank()) {
             reports = reports.stream()

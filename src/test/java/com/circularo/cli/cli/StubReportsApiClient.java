@@ -25,7 +25,7 @@ class StubReportsApiClient extends ReportsApiClient {
     }
 
     @Override
-    public List<WorkflowReport> searchReports(String query) {
+    public List<WorkflowReport> searchReports(String query, int limit) {
         if (exceptionToThrow != null) {
             throw exceptionToThrow;
         }

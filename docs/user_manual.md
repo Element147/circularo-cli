@@ -51,7 +51,7 @@ To view the help tree or command arguments, append `--help` or `-h`:
 ```
 **Expected Output:**
 ```text
-.\circularocli.exe 1.0.0
+circularo-cli 1.0.0
 ```
 
 ---
@@ -75,6 +75,9 @@ Queries the Circularo users database using Elasticsearch query_string syntax. If
 
 # Search for a specific user name or email
 .\circularocli.exe users search -q "Lubo"
+
+# Limit results to 10 records
+.\circularocli.exe users search --limit 10
 
 # Export search results to JSON
 .\circularocli.exe users search -q "mail:*@seznam.cz" -f json
@@ -171,7 +174,7 @@ Submits a password reset request with a username, token code, and the new passwo
 #### Request Password Reset Link (`reset-password-username`)
 Initiates the password reset flow for a given username.
 ```powershell
-.\circularocli.exe users reset-password-username --username joesmith --tenant <tenant-name>
+.\circularocli.exe users reset-password-username joesmith --tenant <tenant-name>
 ```
 
 #### Check Reset Token Validity (`check-reset-token`)
@@ -185,13 +188,13 @@ Validates a password reset token.
 #### Add User to Group (`add-group`)
 Adds a user to a security/permission group.
 ```powershell
-.\circularocli.exe users add-group <id> <groupname>
+.\circularocli.exe users add-group <id> --group <groupname>
 ```
 
 #### Remove User from Group (`remove-group`)
 Removes a user from a security/permission group.
 ```powershell
-.\circularocli.exe users remove-group <id> <groupname>
+.\circularocli.exe users remove-group <id> --group <groupname>
 ```
 
 ### 4.5 Profile Assets & Certificates
@@ -287,6 +290,7 @@ Use the `-q` or `--query` option to filter your documents.
 | **Wildcard Title Search** *(finds anything starting with Invoice)* | `.\circularocli.exe documents -q "title:Invoice*"` |
 | **Search by Status** *(e.g. signed, draft, inprogress)* | `.\circularocli.exe documents -q "status:signed"` |
 | **Combined Search** *(signed documents with "contract" in title)* | `.\circularocli.exe documents -q "status:signed AND title:*contract*"` |
+| **Limit result count** | `.\circularocli.exe documents --limit 10` |
 
 ---
 
@@ -313,6 +317,7 @@ Use the `-q` or `--query` option to filter workflow reports by creator, sender, 
 | **Search by Document Title** | `.\circularocli.exe reports -q "title:\"NDA Agreement.pdf\""` |
 | **Search by Owner/Creator** | `.\circularocli.exe reports -q "owner:Lubos*"` |
 | **Search by Sender** | `.\circularocli.exe reports -q "sender:Lubos*"` |
+| **Limit result count** | `.\circularocli.exe reports --limit 10` |
 
 > [!WARNING]
 > **Sandbox Authorization Limitations:**
@@ -343,6 +348,7 @@ Use the `-s` or `--state` option to filter results by specific transaction state
 | **List Completed Transactions** | `.\circularocli.exe transactions --state completed` |
 | **List In-Progress Transactions** | `.\circularocli.exe transactions --state inprogress` |
 | **Search and Filter by State** *(draft invoices)* | `.\circularocli.exe transactions -q "title:Invoice*" --state draft` |
+| **Limit result count** | `.\circularocli.exe transactions --limit 25` |
 
 ---
 
@@ -355,17 +361,26 @@ The tool supports three output formats:
 
 ### Example: Show users in human-readable table:
 ```powershell
-.\circularocli.exe users --format table
+.\circularocli.exe users search --format table
 ```
+
+> [!NOTE]
+> The top-level `users` command is a dispatch group and does not accept `--format` directly.
+> Always use `users search` (or another subcommand) when specifying output format.
 
 ### Example: Export users to a JSON text block:
 ```powershell
-.\circularocli.exe users --format json
+.\circularocli.exe users search --format json
 ```
 
-### Example: Output users in GFM Markdown format:
+### Example: Output documents in JSON format:
 ```powershell
-.\circularocli.exe users --format md
+.\circularocli.exe documents --format json
+```
+
+### Example: Output reports in GFM Markdown format:
+```powershell
+.\circularocli.exe reports --format md
 ```
 
 ---

@@ -53,10 +53,14 @@ public class UsersApiClient {
 
     /**
      * Searches for Circularo users using the Elasticsearch syntax query.
+     *
+     * @param query optional Elasticsearch query_string filter
+     * @param limit maximum number of results to return
      */
-    public List<User> searchUsers(String query) {
+    public List<User> searchUsers(String query, int limit) {
         Map<String, Object> payload = new HashMap<>();
         payload.put("format", "minimal");
+        payload.put("size", limit);
         if (query != null && !query.isBlank()) {
             Map<String, Object> queryMap = new HashMap<>();
             Map<String, Object> filterMap = new HashMap<>();
