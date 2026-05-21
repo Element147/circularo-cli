@@ -1,6 +1,7 @@
 package com.circularo.cli.cli;
 
 import com.circularo.cli.format.JsonFormatter;
+import com.circularo.cli.format.MarkdownFormatter;
 import com.circularo.cli.format.TableFormatter;
 import com.circularo.cli.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ class UsersCmdTest {
     private StubUsersApiClient apiClient;
     private TableFormatter tableFormatter;
     private JsonFormatter jsonFormatter;
+    private MarkdownFormatter markdownFormatter;
     private UsersCmd usersCmd;
 
     @BeforeEach
@@ -26,7 +28,8 @@ class UsersCmdTest {
         apiClient = new StubUsersApiClient();
         tableFormatter = new TableFormatter();
         jsonFormatter = new JsonFormatter();
-        usersCmd = new UsersCmd(apiClient, tableFormatter, jsonFormatter);
+        markdownFormatter = new MarkdownFormatter();
+        usersCmd = new UsersCmd(apiClient, tableFormatter, jsonFormatter, markdownFormatter);
     }
 
     @Test
@@ -62,5 +65,22 @@ class UsersCmdTest {
         String result = out.toString();
         assertTrue(result.contains("\"fullname\" : \"Mary Griffin\""));
         assertTrue(result.contains("\"role\" : \"admin\""));
+    }
+
+    @Test
+    void run_withMarkdownFormat_queriesApiAndPrintsMarkdown() {
+        List<User> mockUsers = List.of(new User("1", "Mary Griffin", "mary@example.com", "mary", null, null, "admin", "active"));
+        apiClient.setStubUsers(mockUsers);
+
+        StringWriter out = new StringWriter();
+        CommandLine cmd = new CommandLine(usersCmd);
+        cmd.setOut(new PrintWriter(out));
+
+        int exitCode = cmd.execute("-q", "mary", "-f", "md");
+
+        assertEquals(0, exitCode);
+        String result = out.toString();
+        assertTrue(result.contains("| ID/Email | Full Name |"));
+        assertTrue(result.contains("| 1 | Mary Griffin |"));
     }
 }

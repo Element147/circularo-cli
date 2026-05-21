@@ -2,6 +2,7 @@ package com.circularo.cli.cli;
 
 import com.circularo.cli.api.DocumentsApiClient;
 import com.circularo.cli.format.JsonFormatter;
+import com.circularo.cli.format.MarkdownFormatter;
 import com.circularo.cli.format.TableFormatter;
 import com.circularo.cli.model.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,8 @@ import java.util.List;
             "",
             "Formatting Options:",
             "  - Use '-f table' (default) to show results in a readable grid.",
-            "  - Use '-f json' to output raw JSON objects for integration scripts."
+            "  - Use '-f json' to output raw JSON objects for integration scripts.",
+            "  - Use '-f md' to output GFM (GitHub Flavored Markdown) tables."
         },
         footer = {
             "",
@@ -48,6 +50,7 @@ public class DocumentsCmd implements Runnable {
     private final DocumentsApiClient apiClient;
     private final TableFormatter tableFormatter;
     private final JsonFormatter jsonFormatter;
+    private final MarkdownFormatter markdownFormatter;
 
     @Spec
     private CommandSpec spec;
@@ -55,14 +58,15 @@ public class DocumentsCmd implements Runnable {
     @Option(names = {"-q", "--query"}, description = "Elasticsearch query string")
     private String query;
 
-    @Option(names = {"-f", "--format"}, description = "Output format (table, json)", defaultValue = "table")
+    @Option(names = {"-f", "--format"}, description = "Output format (table, json, md)", defaultValue = "table")
     private String format;
 
     @Autowired
-    public DocumentsCmd(DocumentsApiClient apiClient, TableFormatter tableFormatter, JsonFormatter jsonFormatter) {
+    public DocumentsCmd(DocumentsApiClient apiClient, TableFormatter tableFormatter, JsonFormatter jsonFormatter, MarkdownFormatter markdownFormatter) {
         this.apiClient = apiClient;
         this.tableFormatter = tableFormatter;
         this.jsonFormatter = jsonFormatter;
+        this.markdownFormatter = markdownFormatter;
     }
 
     @Override
@@ -74,6 +78,8 @@ public class DocumentsCmd implements Runnable {
             formattedOutput = jsonFormatter.formatDocuments(documents);
         } else if ("table".equalsIgnoreCase(format)) {
             formattedOutput = tableFormatter.formatDocuments(documents);
+        } else if ("md".equalsIgnoreCase(format)) {
+            formattedOutput = markdownFormatter.formatDocuments(documents);
         } else {
             throw new IllegalArgumentException("Unsupported format type: " + format);
         }

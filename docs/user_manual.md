@@ -168,6 +168,12 @@ The `reports` command queries the Circularo document workflow database to genera
 .\build\native\nativeCompile\circularocli.exe reports
 ```
 
+### Detailed/Verbose View:
+Use the `-v` or `--verbose` flag to output detailed lists of actions already processed (participants who processed the action, when, and action type) and those currently waiting on turn.
+```powershell
+.\build\native\nativeCompile\circularocli.exe reports --verbose
+```
+
 ### Filtering Search Results:
 Use the `-q` or `--query` option to filter workflow reports by creator, sender, or document title.
 
@@ -192,6 +198,12 @@ The `transactions` command is tailored to inspect and track specific document wo
 .\build\native\nativeCompile\circularocli.exe transactions
 ```
 
+### Detailed/Verbose View:
+Use the `-v` or `--verbose` flag to inspect detailed participant workflow paths for transactions:
+```powershell
+.\build\native\nativeCompile\circularocli.exe transactions --state completed --verbose
+```
+
 ### Filtering by Transaction State:
 Use the `-s` or `--state` option to filter results by specific transaction states (e.g. `completed`, `inprogress`, `draft`, `cancelled`).
 
@@ -203,11 +215,12 @@ Use the `-s` or `--state` option to filter results by specific transaction state
 
 ---
 
-## 8. Formatting Outputs (Tables vs JSON)
+## 8. Formatting Outputs (Table vs JSON vs Markdown)
 
-By default, the tool displays results in a **Table** grid which is easy for humans to read. 
-
-However, if you want to export the data or use it inside other scripts, you can specify the **JSON** output format using the `-f json` or `--format json` option.
+The tool supports three output formats:
+1. **Table** (default): Human-readable ASCII grids styled for the terminal window.
+2. **JSON**: Structured, machine-readable pretty-printed JSON representation (perfect for scripting and API integrations).
+3. **Markdown**: Standard GFM (GitHub Flavored Markdown) tables, perfect for copying directly into GitHub pull requests, READMEs, or documentation.
 
 ### Example: Show users in human-readable table:
 ```powershell
@@ -217,6 +230,11 @@ However, if you want to export the data or use it inside other scripts, you can 
 ### Example: Export users to a JSON text block:
 ```powershell
 .\build\native\nativeCompile\circularocli.exe users --format json
+```
+
+### Example: Output users in GFM Markdown format:
+```powershell
+.\build\native\nativeCompile\circularocli.exe users --format md
 ```
 
 ---

@@ -1,6 +1,7 @@
 package com.circularo.cli.cli;
 
 import com.circularo.cli.format.JsonFormatter;
+import com.circularo.cli.format.MarkdownFormatter;
 import com.circularo.cli.format.TableFormatter;
 import com.circularo.cli.model.Document;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ class DocumentsCmdTest {
     private StubDocumentsApiClient apiClient;
     private TableFormatter tableFormatter;
     private JsonFormatter jsonFormatter;
+    private MarkdownFormatter markdownFormatter;
     private DocumentsCmd documentsCmd;
 
     @BeforeEach
@@ -26,7 +28,8 @@ class DocumentsCmdTest {
         apiClient = new StubDocumentsApiClient();
         tableFormatter = new TableFormatter();
         jsonFormatter = new JsonFormatter();
-        documentsCmd = new DocumentsCmd(apiClient, tableFormatter, jsonFormatter);
+        markdownFormatter = new MarkdownFormatter();
+        documentsCmd = new DocumentsCmd(apiClient, tableFormatter, jsonFormatter, markdownFormatter);
     }
 
     @Test
@@ -61,5 +64,22 @@ class DocumentsCmdTest {
         String result = out.toString();
         assertTrue(result.contains("\"documentTitle\" : \"Invoice 123\""));
         assertTrue(result.contains("\"type\" : \"invoice\""));
+    }
+
+    @Test
+    void run_withMarkdownFormat_queriesApiAndPrintsMarkdown() {
+        List<Document> mockDocs = List.of(new Document("doc-1", "Invoice 123", "invoice", "2026-05-18", null));
+        apiClient.setStubDocs(mockDocs);
+
+        StringWriter out = new StringWriter();
+        CommandLine cmd = new CommandLine(documentsCmd);
+        cmd.setOut(new PrintWriter(out));
+
+        int exitCode = cmd.execute("-q", "Invoice*", "-f", "md");
+
+        assertEquals(0, exitCode);
+        String result = out.toString();
+        assertTrue(result.contains("| Document ID | Title |"));
+        assertTrue(result.contains("| doc-1 | Invoice 123 |"));
     }
 }

@@ -27,7 +27,17 @@ public interface OutputFormatter {
     String formatReports(List<WorkflowReport> reports);
 
     /**
+     * Formats a list of {@link WorkflowReport} entities with optional verbosity.
+     */
+    String formatReports(List<WorkflowReport> reports, boolean verbose);
+
+    /**
      * Formats a list of {@link WorkflowReport} entities into a deterministic transactions representation.
      */
     String formatTransactions(List<WorkflowReport> transactions);
+
+    /**
+     * Formats a list of {@link WorkflowReport} entities into a deterministic transactions representation with optional verbosity.
+     */
+    String formatTransactions(List<WorkflowReport> transactions, boolean verbose);
 }

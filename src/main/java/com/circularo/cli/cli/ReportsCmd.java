@@ -2,6 +2,7 @@ package com.circularo.cli.cli;
 
 import com.circularo.cli.api.ReportsApiClient;
 import com.circularo.cli.format.JsonFormatter;
+import com.circularo.cli.format.MarkdownFormatter;
 import com.circularo.cli.format.TableFormatter;
 import com.circularo.cli.model.WorkflowReport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ import java.util.List;
             "",
             "Formatting Options:",
             "  - Use '-f table' (default) to show reports in a readable grid.",
-            "  - Use '-f json' to output raw JSON objects for integration scripts."
+            "  - Use '-f json' to output raw JSON objects for integration scripts.",
+            "  - Use '-f md' to output GFM (GitHub Flavored Markdown) tables."
         },
         footer = {
             "",
@@ -47,6 +49,7 @@ public class ReportsCmd implements Runnable {
     private final ReportsApiClient apiClient;
     private final TableFormatter tableFormatter;
     private final JsonFormatter jsonFormatter;
+    private final MarkdownFormatter markdownFormatter;
 
     @Spec
     private CommandSpec spec;
@@ -54,14 +57,18 @@ public class ReportsCmd implements Runnable {
     @Option(names = {"-q", "--query"}, description = "Elasticsearch query string")
     private String query;
 
-    @Option(names = {"-f", "--format"}, description = "Output format (table, json)", defaultValue = "table")
+    @Option(names = {"-f", "--format"}, description = "Output format (table, json, md)", defaultValue = "table")
     private String format;
 
+    @Option(names = {"-v", "--verbose"}, description = "Include detailed lists of processed and waiting actions")
+    private boolean verbose;
+
     @Autowired
-    public ReportsCmd(ReportsApiClient apiClient, TableFormatter tableFormatter, JsonFormatter jsonFormatter) {
+    public ReportsCmd(ReportsApiClient apiClient, TableFormatter tableFormatter, JsonFormatter jsonFormatter, MarkdownFormatter markdownFormatter) {
         this.apiClient = apiClient;
         this.tableFormatter = tableFormatter;
         this.jsonFormatter = jsonFormatter;
+        this.markdownFormatter = markdownFormatter;
     }
 
     @Override
@@ -70,9 +77,11 @@ public class ReportsCmd implements Runnable {
 
         String formattedOutput;
         if ("json".equalsIgnoreCase(format)) {
-            formattedOutput = jsonFormatter.formatReports(reports);
+            formattedOutput = jsonFormatter.formatReports(reports, verbose);
         } else if ("table".equalsIgnoreCase(format)) {
-            formattedOutput = tableFormatter.formatReports(reports);
+            formattedOutput = tableFormatter.formatReports(reports, verbose);
+        } else if ("md".equalsIgnoreCase(format)) {
+            formattedOutput = markdownFormatter.formatReports(reports, verbose);
         } else {
             throw new IllegalArgumentException("Unsupported format type: " + format);
         }

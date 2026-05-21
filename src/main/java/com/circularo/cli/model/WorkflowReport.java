@@ -2,6 +2,7 @@ package com.circularo.cli.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 /**
  * Mapped from docs/api-1.yaml - responseSearchReportsSingle
@@ -19,5 +20,7 @@ public record WorkflowReport(
     @JsonProperty("totalProcessed") Integer totalProcessed,
     @JsonProperty("totalWaitingFor") Integer totalWaitingFor,
     @JsonProperty("owner") String owner,
-    @JsonProperty("sender") String sender
+    @JsonProperty("sender") String sender,
+    @JsonProperty("alreadyProcessed") List<WorkflowReportItem> alreadyProcessed,
+    @JsonProperty("waitingFor") List<WorkflowReportItem> waitingFor
 ) {}

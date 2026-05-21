@@ -3,6 +3,7 @@ package com.circularo.cli.format;
 import com.circularo.cli.model.User;
 import com.circularo.cli.model.Document;
 import com.circularo.cli.model.WorkflowReport;
+import com.circularo.cli.model.WorkflowReportItem;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -58,6 +59,11 @@ public class TableFormatter implements OutputFormatter {
 
     @Override
     public String formatReports(List<WorkflowReport> reports) {
+        return formatReports(reports, false);
+    }
+
+    @Override
+    public String formatReports(List<WorkflowReport> reports, boolean verbose) {
         if (reports == null || reports.isEmpty()) {
             return "No reports found.";
         }
@@ -78,11 +84,50 @@ public class TableFormatter implements OutputFormatter {
             data[i][4] = String.format("%d/%d/%d", processed, waiting, total);
         }
 
-        return renderTable(headers, data);
+        StringBuilder sb = new StringBuilder(renderTable(headers, data));
+
+        if (verbose) {
+            for (WorkflowReport report : reports) {
+                sb.append("\n=== Workflow Details: ").append(getOrEmpty(report.documentTitle()))
+                  .append(" (").append(getOrEmpty(report.documentId())).append(") ===\n");
+                
+                sb.append("Processed Actions:\n");
+                if (report.alreadyProcessed() == null || report.alreadyProcessed().isEmpty()) {
+                    sb.append("  (None)\n");
+                } else {
+                    for (WorkflowReportItem item : report.alreadyProcessed()) {
+                        sb.append("  - ").append(getOrEmpty(item.user()))
+                          .append(" [").append(getOrEmpty(item.shareType())).append("] on ")
+                          .append(getOrEmpty(item.date()))
+                          .append(item.duration() != null ? " (duration: " + item.duration() + "s)" : "")
+                          .append("\n");
+                    }
+                }
+
+                sb.append("Waiting For:\n");
+                if (report.waitingFor() == null || report.waitingFor().isEmpty()) {
+                    sb.append("  (None)\n");
+                } else {
+                    for (WorkflowReportItem item : report.waitingFor()) {
+                        sb.append("  - ").append(getOrEmpty(item.user()))
+                          .append(" [").append(getOrEmpty(item.shareType())).append("] on turn since ")
+                          .append(getOrEmpty(item.dateOfReceivingTheAction()))
+                          .append("\n");
+                    }
+                }
+            }
+        }
+
+        return sb.toString();
     }
 
     @Override
     public String formatTransactions(List<WorkflowReport> transactions) {
+        return formatTransactions(transactions, false);
+    }
+
+    @Override
+    public String formatTransactions(List<WorkflowReport> transactions, boolean verbose) {
         if (transactions == null || transactions.isEmpty()) {
             return "No transactions found.";
         }
@@ -101,7 +146,41 @@ public class TableFormatter implements OutputFormatter {
             data[i][6] = getOrEmpty(tx.transactionEndReason());
         }
 
-        return renderTable(headers, data);
+        StringBuilder sb = new StringBuilder(renderTable(headers, data));
+
+        if (verbose) {
+            for (WorkflowReport report : transactions) {
+                sb.append("\n=== Transaction Participant Details: ").append(getOrEmpty(report.documentTitle()))
+                  .append(" (").append(getOrEmpty(report.documentId())).append(") ===\n");
+                
+                sb.append("Processed Actions:\n");
+                if (report.alreadyProcessed() == null || report.alreadyProcessed().isEmpty()) {
+                    sb.append("  (None)\n");
+                } else {
+                    for (WorkflowReportItem item : report.alreadyProcessed()) {
+                        sb.append("  - ").append(getOrEmpty(item.user()))
+                          .append(" [").append(getOrEmpty(item.shareType())).append("] on ")
+                          .append(getOrEmpty(item.date()))
+                          .append(item.duration() != null ? " (duration: " + item.duration() + "s)" : "")
+                          .append("\n");
+                    }
+                }
+
+                sb.append("Waiting For:\n");
+                if (report.waitingFor() == null || report.waitingFor().isEmpty()) {
+                    sb.append("  (None)\n");
+                } else {
+                    for (WorkflowReportItem item : report.waitingFor()) {
+                        sb.append("  - ").append(getOrEmpty(item.user()))
+                          .append(" [").append(getOrEmpty(item.shareType())).append("] on turn since ")
+                          .append(getOrEmpty(item.dateOfReceivingTheAction()))
+                          .append("\n");
+                    }
+                }
+            }
+        }
+
+        return sb.toString();
     }
 
     private String getOrEmpty(String value) {

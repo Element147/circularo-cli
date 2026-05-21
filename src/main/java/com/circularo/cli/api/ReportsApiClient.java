@@ -1,6 +1,7 @@
 package com.circularo.cli.api;
 
 import com.circularo.cli.model.WorkflowReport;
+import com.circularo.cli.model.WorkflowReportItem;
 import com.circularo.cli.model.WorkflowReportSearchResponse;
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ import java.util.Map;
 @Component
 @RegisterReflectionForBinding({
     WorkflowReport.class,
-    WorkflowReportSearchResponse.class
+    WorkflowReportSearchResponse.class,
+    WorkflowReportItem.class
 })
 public class ReportsApiClient {
 

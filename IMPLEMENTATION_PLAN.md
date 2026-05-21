@@ -6,7 +6,7 @@ This document is the absolute source of truth for the Circularo CLI project. It 
 **Agent Workflow Rules:**
 1. Work in small steps and verify the result after each meaningful change.
 2. Keep notes on unresolved questions and design decisions.
-3. For all API endpoints, request structures, and response schemas, strictly refer to the local `api-1.yaml` Swagger file.
+3. For all API endpoints, request structures, and response schemas, strictly refer to the local `docs/api-1-full.yaml` (full complete API specification) and `docs/api-1.yaml` (API workflow documentation for integrators).
 4. When you complete a task, update the checkbox from `[ ]` to `[x]` and commit the change to preserve progress history.
 
 ---

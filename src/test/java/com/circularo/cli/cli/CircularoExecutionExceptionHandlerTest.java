@@ -2,6 +2,7 @@ package com.circularo.cli.cli;
 
 import com.circularo.cli.api.CircularoCredentialsException;
 import com.circularo.cli.format.JsonFormatter;
+import com.circularo.cli.format.MarkdownFormatter;
 import com.circularo.cli.format.TableFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ class CircularoExecutionExceptionHandlerTest {
     private StubUsersApiClient apiClient;
     private TableFormatter tableFormatter;
     private JsonFormatter jsonFormatter;
+    private MarkdownFormatter markdownFormatter;
     private UsersCmd usersCmd;
 
     @BeforeEach
@@ -25,7 +27,8 @@ class CircularoExecutionExceptionHandlerTest {
         apiClient = new StubUsersApiClient();
         tableFormatter = new TableFormatter();
         jsonFormatter = new JsonFormatter();
-        usersCmd = new UsersCmd(apiClient, tableFormatter, jsonFormatter);
+        markdownFormatter = new MarkdownFormatter();
+        usersCmd = new UsersCmd(apiClient, tableFormatter, jsonFormatter, markdownFormatter);
     }
 
     @Test
