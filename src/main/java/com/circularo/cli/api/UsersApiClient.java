@@ -159,7 +159,14 @@ public class UsersApiClient {
         HttpRequest request = baseClient.newRequestBuilder(path)
                 .GET()
                 .build();
-        return List.of(baseClient.execute(request, UserModels.UserRightItem[].class));
+        if (Boolean.TRUE.equals(detailed)) {
+            return List.of(baseClient.execute(request, UserModels.UserRightItem[].class));
+        } else {
+            String[] rights = baseClient.execute(request, String[].class);
+            return java.util.Arrays.stream(rights)
+                    .map(name -> new UserModels.UserRightItem(null, null, null, null, null, null, null, name, null))
+                    .toList();
+        }
     }
 
     public UserModels.LoginResponse activateUser(Map<String, String> fields, byte[] photoBytes, String photoFilename) {

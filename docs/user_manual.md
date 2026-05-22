@@ -156,7 +156,7 @@ Verifies the validity of the current user account activation token.
 #### Change Password (`change-password`)
 Changes the password for a specific user ID.
 ```powershell
-.\circularocli.exe users change-password <id> --password "NewSecr3t" --old-password "OldSecr3t"
+.\circularocli.exe users change-password <id> --new "NewSecr3t" --current "OldSecr3t"
 ```
 
 #### Check Password Strength (`check-password`)
@@ -226,13 +226,13 @@ Deletes the user's saved initials image.
 #### Add User Certificate (`add-certificate`)
 Adds a certificate to a user profile, passing a local certificate file.
 ```powershell
-.\circularocli.exe users add-certificate <id> --cert-name "SigningCert" --file ./cert.p12
+.\circularocli.exe users add-certificate <id> --name "SigningCert" --type "personal" --file ./cert.p12
 ```
 
 #### Remove User Certificate (`remove-certificate`)
 Removes a certificate from a user profile by certificate ID.
 ```powershell
-.\circularocli.exe users remove-certificate <id> <certificateId>
+.\circularocli.exe users remove-certificate <id> --cert-id=<certificateId>
 ```
 
 > [!NOTE]
@@ -241,13 +241,21 @@ Removes a certificate from a user profile by certificate ID.
 
 ---
 
-## 5. Searching for Documents (The `documents` Command)
+## 5. Searching for Documents (The `documents` Command Group)
 
-The `documents` command queries documents saved in your Circularo repository.
+The `documents` command group provides access to document search and management operations.
 
-### Basic command (Lists all documents):
+Running the base command displays all available subcommands:
 ```powershell
 .\circularocli.exe documents
+```
+
+### Search Documents (`search`)
+Queries documents saved in your Circularo repository.
+
+#### Basic command (Lists all documents):
+```powershell
+.\circularocli.exe documents search
 ```
 **Expected Output (Table Format):**
 ```text
@@ -258,9 +266,9 @@ The `documents` command queries documents saved in your Circularo repository.
 +--------------------------------------+--------------------------+------+--------------------------+--------+
 ```
 
-### Export to JSON:
+#### Export to JSON:
 ```powershell
-.\circularocli.exe documents -f json
+.\circularocli.exe documents search -f json
 ```
 **Expected Output (JSON Format):**
 ```json
@@ -275,7 +283,7 @@ The `documents` command queries documents saved in your Circularo repository.
 } ]
 ```
 
-### Filtering Search Results:
+#### Filtering Search Results:
 Use the `-q` or `--query` option to filter your documents.
 
 > [!NOTE]
@@ -285,70 +293,85 @@ Use the `-q` or `--query` option to filter your documents.
 
 | Goal | Example Command |
 | :--- | :--- |
-| **Exact Title Search** | `.\circularocli.exe documents -q 'title:"Circularo User Guide.pdf"'` |
-| **Search by Document Type** *(e.g. ext, int)* | `.\circularocli.exe documents -q "definitionType:ext"` |
-| **Wildcard Title Search** *(finds anything starting with Invoice)* | `.\circularocli.exe documents -q "title:Invoice*"` |
-| **Search by Status** *(e.g. signed, draft, inprogress)* | `.\circularocli.exe documents -q "status:signed"` |
-| **Combined Search** *(signed documents with "contract" in title)* | `.\circularocli.exe documents -q "status:signed AND title:*contract*"` |
-| **Limit result count** | `.\circularocli.exe documents --limit 10` |
+| **Exact Title Search** | `.\circularocli.exe documents search -q 'title:"Circularo User Guide.pdf"'` |
+| **Search by Document Type** *(e.g. ext, int)* | `.\circularocli.exe documents search -q "definitionType:ext"` |
+| **Wildcard Title Search** *(finds anything starting with Invoice)* | `.\circularocli.exe documents search -q "title:Invoice*"` |
+| **Search by Status** *(e.g. signed, draft, inprogress)* | `.\circularocli.exe documents search -q "status:signed"` |
+| **Combined Search** *(signed documents with "contract" in title)* | `.\circularocli.exe documents search -q "status:signed AND title:*contract*"` |
+| **Limit result count** | `.\circularocli.exe documents search --limit 10` |
 
 ---
 
-## 6. Searching for Workflow Reports (The `reports` Command)
+## 6. Searching for Workflow Reports (The `reports` Command Group)
 
-The `reports` command queries the Circularo document workflow database to generate detailed reports about the circulation (oběh) of documents, showing processed, waiting, and total recipient statistics.
+The `reports` command group provides access to workflow report search and analysis operations.
 
-### Basic command (Lists all reports):
+Running the base command displays all available subcommands:
 ```powershell
 .\circularocli.exe reports
 ```
 
-### Detailed/Verbose View:
-Use the `-v` or `--verbose` flag to output detailed lists of actions already processed (participants who processed the action, when, and action type) and those currently waiting on turn.
+### Search Reports (`search`)
+Queries the Circularo document workflow database to generate detailed reports about the circulation (oběh) of documents, showing processed, waiting, and total recipient statistics.
+
+#### Basic command (Lists all reports):
 ```powershell
-.\circularocli.exe reports --verbose
+.\circularocli.exe reports search
 ```
 
-### Filtering Search Results:
+#### Detailed/Verbose View:
+Use the `-v` or `--verbose` flag to output detailed lists of actions already processed (participants who processed the action, when, and action type) and those currently waiting on turn.
+```powershell
+.\circularocli.exe reports search --verbose
+```
+
+#### Filtering Search Results:
 Use the `-q` or `--query` option to filter workflow reports by creator, sender, or document title.
 
 | Goal | Example Command |
 | :--- | :--- |
-| **Search by Document Title** | `.\circularocli.exe reports -q "title:\"NDA Agreement.pdf\""` |
-| **Search by Owner/Creator** | `.\circularocli.exe reports -q "owner:Lubos*"` |
-| **Search by Sender** | `.\circularocli.exe reports -q "sender:Lubos*"` |
-| **Limit result count** | `.\circularocli.exe reports --limit 10` |
+| **Search by Document Title** | `.\circularocli.exe reports search -q "title:\"NDA Agreement.pdf\""` |
+| **Search by Owner/Creator** | `.\circularocli.exe reports search -q "owner:Lubos*"` |
+| **Search by Sender** | `.\circularocli.exe reports search -q "sender:Lubos*"` |
+| **Limit result count** | `.\circularocli.exe reports search --limit 10` |
 
 > [!WARNING]
 > **Sandbox Authorization Limitations:**
-> Standard demo/sandbox environment tokens typically lack the developer export role (`use_all_documents_export`). Consequently, running either `reports` or `transactions` against the real API returns an `Authorization Error (403 Forbidden)` (detailed in Section 9).
+> Standard demo/sandbox environment tokens typically lack the developer export role (`use_all_documents_export`). Consequently, running either `reports search` or `transactions search` against the real API returns an `Authorization Error (403 Forbidden)` (detailed in Section 9).
 
 ---
 
-## 7. Searching and Filtering Transactions (The `transactions` Command)
+## 7. Searching and Filtering Transactions (The `transactions` Command Group)
 
-The `transactions` command is tailored to inspect and track specific document workflow transactions, including start dates, end dates, duration, reasons, and transaction state.
+The `transactions` command group is tailored to inspect and track specific document workflow transactions, including start dates, end dates, duration, reasons, and transaction state.
 
-### Basic command (Lists all transactions):
+Running the base command displays all available subcommands:
 ```powershell
 .\circularocli.exe transactions
 ```
 
-### Detailed/Verbose View:
-Use the `-v` or `--verbose` flag to inspect detailed participant workflow paths for transactions:
+### Search Transactions (`search`)
+
+#### Basic command (Lists all transactions):
 ```powershell
-.\circularocli.exe transactions --state completed --verbose
+.\circularocli.exe transactions search
 ```
 
-### Filtering by Transaction State:
+#### Detailed/Verbose View:
+Use the `-v` or `--verbose` flag to inspect detailed participant workflow paths for transactions:
+```powershell
+.\circularocli.exe transactions search --state completed --verbose
+```
+
+#### Filtering by Transaction State:
 Use the `-s` or `--state` option to filter results by specific transaction states (e.g. `completed`, `inprogress`, `draft`, `cancelled`).
 
 | Goal | Example Command |
 | :--- | :--- |
-| **List Completed Transactions** | `.\circularocli.exe transactions --state completed` |
-| **List In-Progress Transactions** | `.\circularocli.exe transactions --state inprogress` |
-| **Search and Filter by State** *(draft invoices)* | `.\circularocli.exe transactions -q "title:Invoice*" --state draft` |
-| **Limit result count** | `.\circularocli.exe transactions --limit 25` |
+| **List Completed Transactions** | `.\circularocli.exe transactions search --state completed` |
+| **List In-Progress Transactions** | `.\circularocli.exe transactions search --state inprogress` |
+| **Search and Filter by State** *(draft invoices)* | `.\circularocli.exe transactions search -q "title:Invoice*" --state draft` |
+| **Limit result count** | `.\circularocli.exe transactions search --limit 25` |
 
 ---
 
@@ -375,12 +398,12 @@ The tool supports three output formats:
 
 ### Example: Output documents in JSON format:
 ```powershell
-.\circularocli.exe documents --format json
+.\circularocli.exe documents search --format json
 ```
 
 ### Example: Output reports in GFM Markdown format:
 ```powershell
-.\circularocli.exe reports --format md
+.\circularocli.exe reports search --format md
 ```
 
 ---
@@ -390,11 +413,11 @@ The tool supports three output formats:
 This section details how the CLI handles and formats errors, displaying user-friendly, descriptive messages with corresponding exit codes instead of printing Java stack traces.
 
 ### Scenario A: Missing Credentials (Local Configuration Error)
-* **Trigger:** Running a command when `.env` is missing or contains empty values.
+* **Trigger:** Running an API-communicating command when `.env` is missing or contains empty values.
 * **Command:**
   ```powershell
   # (Temporarily renaming .env triggers this)
-  .\circularocli.exe users
+  .\circularocli.exe users search
   ```
 * **CLI Output (Stderr):**
   ```text
@@ -406,7 +429,7 @@ This section details how the CLI handles and formats errors, displaying user-fri
 * **Trigger:** Requesting a resource that requires rights not granted to your API token.
 * **Command:**
   ```powershell
-  .\circularocli.exe reports
+  .\circularocli.exe reports search
   ```
 * **CLI Output (Stderr):**
   ```text
@@ -418,7 +441,7 @@ This section details how the CLI handles and formats errors, displaying user-fri
 * **Trigger:** Sending a search string format that is rejected by the server index parser.
 * **Command:**
   ```powershell
-  .\circularocli.exe users -q "Luboš"
+  .\circularocli.exe users search -q "Luboš"
   ```
 * **CLI Output (Stderr):**
   ```text
@@ -431,7 +454,7 @@ This section details how the CLI handles and formats errors, displaying user-fri
 * **Command:**
   ```powershell
   # (Simulated with invalid URL)
-  .\circularocli.exe users
+  .\circularocli.exe users search
   ```
 * **CLI Output (Stderr):**
   ```text

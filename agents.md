@@ -52,10 +52,11 @@ Before executing ANY prompt, analyze the user's request and the files in context
 
 ### 🟢 TRIGGER: UI & Command Layer
 
-**WHEN** the user asks to add a new command, parse arguments, or you are editing files in `src/main/java/com/circularo/cli/cli/*`:
+**WHEN** the user asks to add a new command, parse arguments, or you are editing files in `src/main/java/com/circularo/cli/cli/**/*`:
 
 - **Execute Skill [Strict Boundaries]:** Put only Picocli `@Command` and `@Option` logic here. Do NOT write HTTP calls or output formatting in these classes. Inject services via constructor.
-- **Execute Skill [Deterministic Output]:** Always ensure the command accepts a `--format` flag. Route the API response to the `format` package. Never use raw `System.out.println` here.
+- **Execute Skill [Deterministic Output]:** Always ensure the command accepts a `--format` flag via `FormatMixin`. Route the API response through `OutputHelper`. Never use raw `System.out.println` here.
+- **Execute Skill [CLI Command Conventions]:** Read `.agents/skills/cli-command-conventions/SKILL.md` and follow the template exactly. All new commands MUST be placed in domain subpackages (`cli.users`, `cli.documents`, etc.), use `FormatMixin` + `OutputHelper`, and follow the 2-param constructor pattern.
 
 ### 🟢 TRIGGER: API & Network Layer
 

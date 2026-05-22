@@ -12,9 +12,11 @@ description: Guidance on Picocli boundaries, CLI command structure, and output f
 - **DO** route API responses to the formatting package or service for output generation.
 
 ## 2. Deterministic Output with `--format`
-- Every search or fetch command must support a `--format` flag (e.g., `json`, `md`, `tabular`).
-- Do not use raw `System.out.println` within the controller classes. Route responses to an output formatting utility that renders the output deterministically based on the chosen format.
+- Every search or fetch command must support a `--format` flag via `@Mixin FormatMixin` (never inline `@Option`).
+- Formatting dispatch must go through `OutputHelper.format(...)` — never inject `TableFormatter`, `JsonFormatter`, or `MarkdownFormatter` directly.
+- Do not use raw `System.out.println` within the controller classes. Use `spec.commandLine().getOut().println(...)`.
 - Output field ordering and names should remain stable across invocations.
+- See `.agents/skills/cli-command-conventions/SKILL.md` for the full command template.
 
 ## 3. Help Messages
 - When adding or modifying options or subcommands, ensure `@Command(description = "...")` and `@Option(description = "...")` are fully descriptive.

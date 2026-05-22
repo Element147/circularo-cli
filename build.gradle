@@ -41,6 +41,7 @@ graalvmNative {
 				vendor = JvmVendorSpec.GRAAL_VM
 			}
 			runtimeArgs.set([])
+			buildArgs.add("-H:IncludeResources=.*logback.*")
 		}
 		test {
 			javaLauncher = javaToolchains.launcherFor {

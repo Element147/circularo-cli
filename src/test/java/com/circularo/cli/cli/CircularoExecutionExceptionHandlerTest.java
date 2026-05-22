@@ -1,15 +1,21 @@
 package com.circularo.cli.cli;
 
 import com.circularo.cli.api.CircularoCredentialsException;
+import com.circularo.cli.api.UsersApiClient;
+import com.circularo.cli.cli.users.UsersSearchCmd;
 import com.circularo.cli.format.JsonFormatter;
 import com.circularo.cli.format.MarkdownFormatter;
 import com.circularo.cli.format.TableFormatter;
+import com.circularo.cli.model.User;
+import com.circularo.cli.model.UserModels;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,18 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CircularoExecutionExceptionHandlerTest {
 
     private StubUsersApiClient apiClient;
-    private TableFormatter tableFormatter;
-    private JsonFormatter jsonFormatter;
-    private MarkdownFormatter markdownFormatter;
+    private OutputHelper outputHelper;
     private UsersSearchCmd usersSearchCmd;
 
     @BeforeEach
     void setUp() {
         apiClient = new StubUsersApiClient();
-        tableFormatter = new TableFormatter();
-        jsonFormatter = new JsonFormatter();
-        markdownFormatter = new MarkdownFormatter();
-        usersSearchCmd = new UsersSearchCmd(apiClient, tableFormatter, jsonFormatter, markdownFormatter);
+        outputHelper = new OutputHelper(new TableFormatter(), new JsonFormatter(), new MarkdownFormatter());
+        usersSearchCmd = new UsersSearchCmd(apiClient, outputHelper);
     }
 
     @Test
@@ -59,5 +61,29 @@ class CircularoExecutionExceptionHandlerTest {
 
         assertEquals(2, exitCode);
         assertTrue(err.toString().contains("Unexpected System Error: Something broke"));
+    }
+
+    /**
+     * A package-local stub kept in the same package as the test so
+     * that CircularoExecutionExceptionHandlerTest can access it.
+     */
+    static class StubUsersApiClient extends UsersApiClient {
+        private RuntimeException exceptionToThrow;
+
+        public StubUsersApiClient() {
+            super(null);
+        }
+
+        public void setException(RuntimeException ex) {
+            this.exceptionToThrow = ex;
+        }
+
+        @Override
+        public List<User> searchUsers(String query, int limit) {
+            if (exceptionToThrow != null) {
+                throw exceptionToThrow;
+            }
+            return List.of();
+        }
     }
 }

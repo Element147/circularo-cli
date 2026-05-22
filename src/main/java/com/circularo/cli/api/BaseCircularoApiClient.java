@@ -93,7 +93,14 @@ public class BaseCircularoApiClient {
                 }
             }
         } catch (IOException e) {
-            throw new CircularoException("Network error occurred during Circularo API call: " + e.getMessage(), e);
+            String msg = e.getMessage();
+            if (msg == null && e.getCause() != null) {
+                msg = e.getCause().getMessage();
+            }
+            if (msg == null) {
+                msg = e.toString();
+            }
+            throw new CircularoException("Network error occurred during Circularo API call: " + msg, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new CircularoException("Circularo API call was interrupted", e);
@@ -109,7 +116,7 @@ public class BaseCircularoApiClient {
         try {
             return objectMapper.readValue(response.body(), responseType);
         } catch (IOException e) {
-            throw new CircularoException("Failed to deserialize response payload", e);
+            throw new CircularoException("Failed to deserialize response payload: " + e.getMessage() + "\nResponse body: " + response.body(), e);
         }
     }
 

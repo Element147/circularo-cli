@@ -20,6 +20,7 @@ public class CircularoCliApplication implements CommandLineRunner, ExitCodeGener
     }
 
     public static void main(String[] args) {
+        System.setProperty("logback.statusListenerClass", "ch.qos.logback.core.status.NopStatusListener");
         System.exit(SpringApplication.exit(SpringApplication.run(CircularoCliApplication.class, args)));
     }
 

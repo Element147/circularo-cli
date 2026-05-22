@@ -113,20 +113,19 @@ public class UserModels {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record UpdateUsersBulkRequest(
-        @JsonProperty("ids") List<String> ids,
-        @JsonProperty("update") Map<String, Object> update
+        @JsonProperty("users") List<String> users,
+        @JsonProperty("data") Map<String, Object> data
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record ChangePasswordRequest(
         @JsonProperty("currentPassword") String currentPassword,
-        @JsonProperty("password") String password
+        @JsonProperty("newPassword") String newPassword
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record ResetPasswordRequest(
-        @JsonProperty("username") String username,
-        @JsonProperty("code") String code,
+        @JsonProperty("resetToken") String resetToken,
         @JsonProperty("password") String password
     ) {}
 

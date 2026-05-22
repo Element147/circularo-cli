@@ -28,36 +28,49 @@ src/main/java/com/circularo/cli/
 ├── RootCmd.java                     Root @Command — dispatches to domain sub-commands
 │
 ├── cli/                             ── COMMAND LAYER ──────────────────────────────────────
-│   ├── UsersCmd.java                  Dispatch group: users
-│   ├── UsersSearchCmd.java            users search --query --limit --format
-│   ├── UsersGetCmd.java               users get <id>
-│   ├── UsersCreateCmd.java            users create --file
-│   ├── UsersUpdateCmd.java            users update --file
-│   ├── UsersUpdateSingleCmd.java      users update-single <id> --file
-│   ├── UsersDeleteCmd.java            users delete <id> [--reassign]
-│   ├── UsersGetByUsernameCmd.java     users get-by-username <name>
-│   ├── UsersRightsCmd.java            users rights <id>
-│   ├── UsersActivateCmd.java          users activate --password --fullname [--file]
-│   ├── UsersResendActivationCmd.java  users resend-activation <id>
-│   ├── UsersCheckActivationCmd.java   users check-activation
-│   ├── UsersChangePasswordCmd.java    users change-password <id>
-│   ├── UsersCheckPasswordCmd.java     users check-password --password --tenant
-│   ├── UsersResetPasswordCmd.java     users reset-password --username --code --new-password
-│   ├── UsersResetPasswordUsernameCmd  users reset-password-username <username>
-│   ├── UsersCheckResetTokenCmd.java   users check-reset-token --token
-│   ├── UsersAddGroupCmd.java          users add-group <id> --group <name>
-│   ├── UsersRemoveGroupCmd.java       users remove-group <id> --group <name>
-│   ├── UsersUploadPhotoCmd.java       users upload-photo <id> --file
-│   ├── UsersDeletePhotoCmd.java       users delete-photo <id>
-│   ├── UsersDeleteSignatureCmd.java   users delete-signature <id>
-│   ├── UsersDeleteInitialsCmd.java    users delete-initials <id>
-│   ├── UsersAddCertificateCmd.java    users add-certificate <id> --name --type --file
-│   ├── UsersRemoveCertificateCmd.java users remove-certificate <id> --cert-id
-│   ├── UsersRegisterCmd.java          users register --name --email --fullname
-│   ├── DocumentsCmd.java              documents --query --limit --format
-│   ├── ReportsCmd.java                reports --query --limit --format --verbose
-│   ├── TransactionsCmd.java           transactions --query --state --limit --format --verbose
-│   └── CircularoExecutionExceptionHandler  Maps exceptions to clean stderr + exit codes
+│   ├── FormatMixin.java              Picocli @Mixin — shared --format option definition
+│   ├── OutputHelper.java             Spring @Component — format dispatch (table/json/md)
+│   ├── CircularoExecutionExceptionHandler  Maps exceptions to clean stderr + exit codes
+│   │
+│   ├── users/                        ── USER COMMANDS ────────────────────────────────────
+│   │   ├── UsersCmd.java                Dispatch group: users
+│   │   ├── UsersSearchCmd.java          users search --query --limit --format
+│   │   ├── UsersGetCmd.java             users get <id>
+│   │   ├── UsersCreateCmd.java          users create --file
+│   │   ├── UsersUpdateCmd.java          users update --file
+│   │   ├── UsersUpdateSingleCmd.java    users update-single <id> --file
+│   │   ├── UsersDeleteCmd.java          users delete <id> [--reassign]
+│   │   ├── UsersGetByUsernameCmd.java   users get-by-username <name>
+│   │   ├── UsersRightsCmd.java          users rights <id>
+│   │   ├── UsersActivateCmd.java        users activate --password --fullname [--file]
+│   │   ├── UsersResendActivationCmd.java users resend-activation <id>
+│   │   ├── UsersCheckActivationCmd.java users check-activation
+│   │   ├── UsersChangePasswordCmd.java  users change-password <id>
+│   │   ├── UsersCheckPasswordCmd.java   users check-password --password --tenant
+│   │   ├── UsersResetPasswordCmd.java   users reset-password --username --code --new-password
+│   │   ├── UsersResetPasswordUsernameCmd users reset-password-username <username>
+│   │   ├── UsersCheckResetTokenCmd.java users check-reset-token --token
+│   │   ├── UsersAddGroupCmd.java        users add-group <id> --group <name>
+│   │   ├── UsersRemoveGroupCmd.java     users remove-group <id> --group <name>
+│   │   ├── UsersUploadPhotoCmd.java     users upload-photo <id> --file
+│   │   ├── UsersDeletePhotoCmd.java     users delete-photo <id>
+│   │   ├── UsersDeleteSignatureCmd.java users delete-signature <id>
+│   │   ├── UsersDeleteInitialsCmd.java  users delete-initials <id>
+│   │   ├── UsersAddCertificateCmd.java  users add-certificate <id> --name --type --file
+│   │   ├── UsersRemoveCertificateCmd.java users remove-certificate <id> --cert-id
+│   │   └── UsersRegisterCmd.java        users register --name --email --fullname
+│   │
+│   ├── documents/                    ── DOCUMENT COMMANDS ─────────────────────────────────
+│   │   ├── DocumentsCmd.java            Dispatch group: documents
+│   │   └── DocumentsSearchCmd.java      documents search --query --limit --format
+│   │
+│   ├── reports/                      ── REPORT COMMANDS ───────────────────────────────────
+│   │   ├── ReportsCmd.java              Dispatch group: reports
+│   │   └── ReportsSearchCmd.java        reports search --query --limit --format --verbose
+│   │
+│   └── transactions/                 ── TRANSACTION COMMANDS ──────────────────────────────
+│       ├── TransactionsCmd.java         Dispatch group: transactions
+│       └── TransactionsSearchCmd.java   transactions search --query --state --limit --format --verbose
 │
 ├── api/                             ── API LAYER ───────────────────────────────────────────
 │   ├── BaseCircularoApiClient.java    Core HTTP client — auth injection, error mapping, JSON
@@ -92,14 +105,16 @@ src/main/java/com/circularo/cli/
 
 ### Layer Dependency Rules
 ```
-cli/ → api/ (inject domain ApiClient)
-cli/ → format/ (inject OutputFormatter implementations)
+cli/<domain>/ → cli/OutputHelper (inject shared format dispatcher)
+cli/<domain>/ → cli/FormatMixin  (mixin for --format option)
+cli/<domain>/ → api/ (inject domain ApiClient)
 api/ → config/ (inject ConfigLoader for credentials)
 api/ → model/ (deserialize responses into domain records)
 format/ → model/ (render domain records to strings)
 ```
 
 > The command layer **never** makes HTTP calls directly.
+> The command layer **never** injects formatters directly — always via `OutputHelper`.
 > The API layer **never** formats output.
 > Each layer is independently unit-testable via stubs.
 
