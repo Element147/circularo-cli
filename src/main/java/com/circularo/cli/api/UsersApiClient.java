@@ -63,13 +63,11 @@ public class UsersApiClient {
         payload.put("size", limit);
         if (query != null && !query.isBlank()) {
             Map<String, Object> queryMap = new HashMap<>();
-            Map<String, Object> filterMap = new HashMap<>();
             Map<String, Object> mustMap = new HashMap<>();
             Map<String, Object> queryStringMap = new HashMap<>();
             queryStringMap.put("query", query);
             mustMap.put("query_string", queryStringMap);
-            filterMap.put("must", java.util.List.of(mustMap));
-            queryMap.put("query", filterMap);
+            queryMap.put("must", java.util.List.of(mustMap));
             payload.put("userQuery", queryMap);
         }
         
