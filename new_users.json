@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "mail": "lubo.skorica@circularo.com",
+      "fullname": "Lubos Skorica",
+      "name": "lubos",
+      "phone": "+420123456789",
+      "role": "admin",
+      "status": "active",
+      "group": []
+    },
+    {
+      "mail": "joe.smith@circularo.com",
+      "fullname": "Joe Smith",
+      "name": "joesmith",
+      "phone": "+15551234567",
+      "role": "user",
+      "status": "active",
+      "group": []
+    }
+  ],
+  "sendMail": true,
+  "edition": "standard",
+  "createdOnBehalfOf": "admin"
+}

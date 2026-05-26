@@ -1,0 +1,7 @@
+{
+  "users": ["lubo.skorica@circularo.com", "joe.smith@circularo.com"],
+  "data": {
+    "status": "active",
+    "role": "user"
+  }
+}
