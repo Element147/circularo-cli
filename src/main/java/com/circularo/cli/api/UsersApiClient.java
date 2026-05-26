@@ -60,16 +60,52 @@ public class UsersApiClient {
     public List<User> searchUsers(String query, int limit) {
         Map<String, Object> payload = new HashMap<>();
         payload.put("format", "minimal");
-        payload.put("size", limit);
+        
+        Map<String, Object> userQuery = new HashMap<>();
+        userQuery.put("size", limit);
+        
         if (query != null && !query.isBlank()) {
-            Map<String, Object> queryMap = new HashMap<>();
+            Map<String, Object> queryObject = new HashMap<>();
+            
+            String field = "fullname";
+            String type = "wildcard";
+            String value = query.trim();
+            
+            if (value.startsWith("+")) {
+                value = value.substring(1).trim();
+            }
+            
+            int colonIndex = value.indexOf(':');
+            if (colonIndex > 0) {
+                field = value.substring(0, colonIndex).trim();
+                value = value.substring(colonIndex + 1).trim();
+            }
+            
+            if ((value.startsWith("\"") && value.endsWith("\"")) || (value.startsWith("'") && value.endsWith("'"))) {
+                value = value.substring(1, value.length() - 1);
+            }
+            
+            if (value.contains("*") || value.contains("?")) {
+                type = "wildcard";
+            } else {
+                type = "term";
+                if (!field.equalsIgnoreCase("mail") && !field.equalsIgnoreCase("id")) {
+                    value = "*" + value + "*";
+                    type = "wildcard";
+                }
+            }
+            
+            value = value.toLowerCase();
+            
             Map<String, Object> mustMap = new HashMap<>();
-            Map<String, Object> queryStringMap = new HashMap<>();
-            queryStringMap.put("query", query);
-            mustMap.put("query_string", queryStringMap);
-            queryMap.put("must", java.util.List.of(mustMap));
-            payload.put("userQuery", queryMap);
+            mustMap.put("field", field);
+            mustMap.put("type", type);
+            mustMap.put("value", value);
+            
+            queryObject.put("must", java.util.List.of(mustMap));
+            userQuery.put("query", queryObject);
         }
+        payload.put("userQuery", userQuery);
         
         String body = baseClient.toJson(payload);
         HttpRequest request = baseClient.newRequestBuilder("users/search")
@@ -78,7 +114,11 @@ public class UsersApiClient {
                 .build();
                 
         UserSearchResponse searchResponse = baseClient.execute(request, UserSearchResponse.class);
-        return searchResponse.results() != null ? searchResponse.results() : java.util.List.of();
+        List<User> results = searchResponse.results() != null ? searchResponse.results() : java.util.List.of();
+        if (limit > 0 && results.size() > limit) {
+            return results.subList(0, limit);
+        }
+        return results;
     }
 
     public User getUser(String id) {
