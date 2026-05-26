@@ -125,6 +125,7 @@ class ReportsCmdTest {
     void run_reportsCmd_printsUsage() {
         CommandLine.IFactory factory = new CommandLine.IFactory() {
             @Override
+            @SuppressWarnings("unchecked")
             public <K> K create(Class<K> cls) throws Exception {
                 if (cls == ReportsSearchCmd.class) return (K) new ReportsSearchCmd(apiClient, outputHelper);
                 return CommandLine.defaultFactory().create(cls);

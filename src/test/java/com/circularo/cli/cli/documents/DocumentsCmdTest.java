@@ -116,6 +116,7 @@ class DocumentsCmdTest {
     void run_documentsCmd_printsUsage() {
         CommandLine.IFactory factory = new CommandLine.IFactory() {
             @Override
+            @SuppressWarnings("unchecked")
             public <K> K create(Class<K> cls) throws Exception {
                 if (cls == DocumentsSearchCmd.class) return (K) new DocumentsSearchCmd(apiClient, outputHelper);
                 return CommandLine.defaultFactory().create(cls);

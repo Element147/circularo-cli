@@ -470,6 +470,7 @@ class UsersCmdTest {
     void run_usersCmd_printsUsage() {
         CommandLine.IFactory factory = new CommandLine.IFactory() {
             @Override
+            @SuppressWarnings("unchecked")
             public <K> K create(Class<K> cls) throws Exception {
                 if (cls == UsersSearchCmd.class) return (K) new UsersSearchCmd(apiClient, outputHelper);
                 if (cls == UsersGetCmd.class) return (K) new UsersGetCmd(apiClient, outputHelper);

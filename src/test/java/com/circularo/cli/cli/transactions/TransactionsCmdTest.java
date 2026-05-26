@@ -127,6 +127,7 @@ class TransactionsCmdTest {
     void run_transactionsCmd_printsUsage() {
         CommandLine.IFactory factory = new CommandLine.IFactory() {
             @Override
+            @SuppressWarnings("unchecked")
             public <K> K create(Class<K> cls) throws Exception {
                 if (cls == TransactionsSearchCmd.class) return (K) new TransactionsSearchCmd(apiClient, outputHelper);
                 return CommandLine.defaultFactory().create(cls);

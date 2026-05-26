@@ -1,0 +1,10 @@
+{
+  "size": 50,
+  "esQuery": [
+    {
+      "query_string": {
+        "query": "title:\"Circularo User Guide.pdf\""
+      }
+    }
+  ]
+}
