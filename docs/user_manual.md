@@ -83,10 +83,10 @@ Queries the Circularo users database using Elasticsearch query_string syntax. If
 .\circularocli.exe users search -q "mail:*@seznam.cz" -f json
 ```
 
-#### Get User by ID (`get`)
-Gets complete details for the user with the specified ID.
+#### Get User by ID/Email (`get`)
+Gets complete details for the user with the specified ID or email address.
 ```powershell
-.\circularocli.exe users get <id>
+.\circularocli.exe users get <id/email>
 ```
 
 #### Get Simple User Info by Username (`get-by-username`)
@@ -98,7 +98,7 @@ Retrieves simple user info using the username.
 #### Get User Rights (`rights`)
 Displays the actions and access rights assigned to a user.
 ```powershell
-.\circularocli.exe users rights <id> --detailed
+.\circularocli.exe users rights <id/email> --detailed
 ```
 
 ### 4.2 Account CRUD Operations
@@ -116,15 +116,15 @@ Updates properties of multiple users in bulk using a JSON payload file.
 ```
 
 #### Update Single User (`update-single`)
-Modifies a single user's properties by ID, with optional active token disabling and optimistic locking versioning.
+Modifies a single user's properties by ID or email address, with optional active token disabling and optimistic locking versioning.
 ```powershell
-.\circularocli.exe users update-single <id> --file ./user_properties.json --disable-active-tokens --version 1
+.\circularocli.exe users update-single <id/email> --file ./user_properties.json --disable-active-tokens --version 1
 ```
 
 #### Delete User (`delete`)
 Deletes the specified user account, with an optional username to reassign their resources to.
 ```powershell
-.\circularocli.exe users delete <id> --reassign <username>
+.\circularocli.exe users delete <id/email> --reassign <username>
 ```
 
 #### Register User (`register`)
@@ -144,7 +144,7 @@ Activates a new user account. Requires setting a password. You can optionally up
 #### Resend Activation Email (`resend-activation`)
 Resends the activation link/email to a newly created user.
 ```powershell
-.\circularocli.exe users resend-activation <id> --tenant <tenant-name>
+.\circularocli.exe users resend-activation <id/email> --tenant <tenant-name>
 ```
 
 #### Check Activation Token (`check-activation`)
@@ -154,9 +154,9 @@ Verifies the validity of the current user account activation token.
 ```
 
 #### Change Password (`change-password`)
-Changes the password for a specific user ID.
+Changes the password for a specific user.
 ```powershell
-.\circularocli.exe users change-password <id> --new "NewSecr3t" --current "OldSecr3t"
+.\circularocli.exe users change-password <id/email> --new "NewSecr3t" --current "OldSecr3t"
 ```
 
 #### Check Password Strength (`check-password`)
@@ -188,13 +188,13 @@ Validates a password reset token.
 #### Add User to Group (`add-group`)
 Adds a user to a security/permission group.
 ```powershell
-.\circularocli.exe users add-group <id> --group <groupname>
+.\circularocli.exe users add-group <id/email> --group <groupname>
 ```
 
 #### Remove User from Group (`remove-group`)
 Removes a user from a security/permission group.
 ```powershell
-.\circularocli.exe users remove-group <id> --group <groupname>
+.\circularocli.exe users remove-group <id/email> --group <groupname>
 ```
 
 ### 4.5 Profile Assets & Certificates
@@ -202,37 +202,37 @@ Removes a user from a security/permission group.
 #### Upload Profile Photo (`upload-photo`)
 Uploads a local image file as the user's profile photo.
 ```powershell
-.\circularocli.exe users upload-photo <id> --file ./photo.jpg
+.\circularocli.exe users upload-photo <id/email> --file ./photo.jpg
 ```
 
 #### Delete Profile Photo (`delete-photo`)
 Deletes the profile photo of a user.
 ```powershell
-.\circularocli.exe users delete-photo <id>
+.\circularocli.exe users delete-photo <id/email>
 ```
 
 #### Delete Signature Image (`delete-signature`)
 Deletes the user's saved hand-drawn signature image.
 ```powershell
-.\circularocli.exe users delete-signature <id>
+.\circularocli.exe users delete-signature <id/email>
 ```
 
 #### Delete Initials Image (`delete-initials`)
 Deletes the user's saved initials image.
 ```powershell
-.\circularocli.exe users delete-initials <id>
+.\circularocli.exe users delete-initials <id/email>
 ```
 
 #### Add User Certificate (`add-certificate`)
 Adds a certificate to a user profile, passing a local certificate file.
 ```powershell
-.\circularocli.exe users add-certificate <id> --name "SigningCert" --type "personal" --file ./cert.p12
+.\circularocli.exe users add-certificate <id/email> --name "SigningCert" --type "personal" --file ./cert.p12
 ```
 
 #### Remove User Certificate (`remove-certificate`)
 Removes a certificate from a user profile by certificate ID.
 ```powershell
-.\circularocli.exe users remove-certificate <id> --cert-id=<certificateId>
+.\circularocli.exe users remove-certificate <id/email> --cert-id=<certificateId>
 ```
 
 > [!NOTE]
